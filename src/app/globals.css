@@ -1,0 +1,300 @@
+@import "tailwindcss";
+
+:root {
+  --font-serif-family: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-sans-family: var(--font-be-vietnam), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  --ceramic-clay: #FAF7F2;
+  --ceramic-parchment: #F5EFEB;
+  --ceramic-sand: #EAE1D2;
+  --ceramic-charcoal: #2A2421;
+  --ceramic-ink: #181412;
+  --ceramic-gold: #C5A059;
+  --ceramic-gold-light: #DFBF7C;
+  --ceramic-gold-dark: #8C6D27;
+  --ceramic-red: #8B1E1F;
+  --ceramic-red-light: #B2282A;
+  --ceramic-red-dark: #5C1213;
+  --ceramic-blue: #162E4A;
+  --ceramic-blue-light: #2A4E7A;
+  --ceramic-jade: #1E4638;
+  
+  --shadow-soft: 0 2px 8px rgba(42, 36, 33, 0.08);
+  --shadow-medium: 0 4px 16px rgba(42, 36, 33, 0.12);
+  --shadow-strong: 0 8px 32px rgba(42, 36, 33, 0.16);
+  --shadow-glow-gold: 0 0 24px rgba(197, 160, 89, 0.3);
+  --shadow-glow-red: 0 0 24px rgba(139, 30, 31, 0.25);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: linear-gradient(to bottom, #FAF7F2 0%, #F5EFEB 50%, #EAE1D2 100%);
+  color: var(--ceramic-charcoal);
+  font-family: var(--font-sans-family);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .font-serif-title {
+  font-family: var(--font-serif-family);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Smooth Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(197, 160, 89, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(197, 160, 89, 0.6); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.6s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Traditional Oriental Seal Stamp (Dấu Triện Chu Sa) */
+.seal-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--ceramic-red);
+  background-color: rgba(139, 30, 31, 0.06);
+  color: var(--ceramic-red);
+  font-family: var(--font-serif-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(139, 30, 31, 0.3);
+  user-select: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.seal-stamp:hover {
+  transform: scale(1.05);
+  box-shadow: inset 0 0 0 1px rgba(139, 30, 31, 0.5), var(--shadow-glow-red);
+}
+
+.seal-stamp::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 1px dashed rgba(139, 30, 31, 0.4);
+  pointer-events: none;
+}
+
+/* Gold Gradient Shimmer with Animation */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #B38728 0%, #FBF5B7 40%, #DAA520 70%, #AA771C 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #B38728 0%, #D4AF37 50%, #8C6D27 100%);
+  background-size: 200% 200%;
+  transition: background-position 0.5s ease;
+}
+
+.bg-gold-gradient:hover {
+  background-position: 100% 50%;
+}
+
+.border-gold-gradient {
+  border-image: linear-gradient(to right, #B38728, #FBF5B7, #DAA520) 1;
+}
+
+/* Glassmorphism Effect */
+.glass-morph {
+  background: rgba(250, 247, 242, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+.glass-morph-dark {
+  background: rgba(42, 36, 33, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+}
+
+/* Oriental Traditional Pattern Border */
+.oriental-border-corner {
+  position: relative;
+}
+.oriental-border-corner::before,
+.oriental-border-corner::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #C5A059;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+.oriental-border-corner::before {
+  top: -2px;
+  left: -2px;
+  border-right: none;
+  border-bottom: none;
+}
+.oriental-border-corner::after {
+  bottom: -2px;
+  right: -2px;
+  border-left: none;
+  border-top: none;
+}
+.oriental-border-corner:hover::before,
+.oriental-border-corner:hover::after {
+  border-color: #8B1E1F;
+  width: 18px;
+  height: 18px;
+}
+
+/* Subtle Ceramic Men Rạn (Crackled Glaze) Texture */
+.texture-crackle {
+  background-image: radial-gradient(rgba(197, 160, 89, 0.12) 1px, transparent 0);
+  background-size: 20px 20px;
+  position: relative;
+}
+
+.texture-crackle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 48%, rgba(197, 160, 89, 0.03) 49%, rgba(197, 160, 89, 0.03) 51%, transparent 52%);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* Enhanced Shadow Utilities */
+.shadow-2xs {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-xs {
+  box-shadow: var(--shadow-medium);
+}
+
+.shadow-glow-gold {
+  box-shadow: var(--shadow-glow-gold);
+}
+
+.shadow-glow-red {
+  box-shadow: var(--shadow-glow-red);
+}
+
+/* Smooth Transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-bounce {
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Hover Lift Effect */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-strong);
+}
+
+/* Skeleton Loader */
+@keyframes skeleton-loading {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #F5EFEB 0px, #DFBF7C 40px, #F5EFEB 80px);
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.4s ease-in-out infinite;
+}
+
+/* Scrollbar Enhancements */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, #F4ECE1, #EAE1D2);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #C5A059, #8C6D27);
+  border-radius: 5px;
+  border: 2px solid #F4ECE1;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #8B1E1F, #5C1213);
+}
+
+/* Selection Highlight */
+::selection {
+  background: rgba(197, 160, 89, 0.3);
+  color: var(--ceramic-ink);
+}
+
+::-moz-selection {
+  background: rgba(197, 160, 89, 0.3);
+  color: var(--ceramic-ink);
+}
