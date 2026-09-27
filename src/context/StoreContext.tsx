@@ -7,9 +7,50 @@ import {
   Order, 
   StoreSettings, 
   CeramicCategory, 
-  CeramicGlaze 
+  CeramicGlaze,
+  UserAccount,
+  UserRole
 } from '@/types';
 import { INITIAL_PRODUCTS, DEFAULT_STORE_SETTINGS } from '@/data/products';
+
+export const INITIAL_USERS: UserAccount[] = [
+  {
+    id: 'usr-admin',
+    name: 'Chủ Xưởng Minh Huyền',
+    email: 'admin@minhhuyen.vn',
+    phone: '0988686888',
+    password: '123',
+    role: 'admin',
+    address: 'Xóm 1, Làng Cổ Gốm Sứ Bát Tràng, Gia Lâm',
+    city: 'Hà Nội',
+    active: true,
+    createdAt: '2026-01-01T08:00:00Z'
+  },
+  {
+    id: 'usr-manager',
+    name: 'Nguyễn Văn Đức (Bán Hàng)',
+    email: 'banhang@minhhuyen.vn',
+    phone: '0912888999',
+    password: '123',
+    role: 'manager',
+    address: 'Showroom Gốm Minh Huyền, Gia Lâm',
+    city: 'Hà Nội',
+    active: true,
+    createdAt: '2026-02-15T09:30:00Z'
+  },
+  {
+    id: 'usr-customer',
+    name: 'Trần Thu Hà',
+    email: 'khachhang@gmail.com',
+    phone: '0912345678',
+    password: '123',
+    role: 'user',
+    address: 'Số 45 Tràng Tiền, Quận Hoàn Kiếm',
+    city: 'Hà Nội',
+    active: true,
+    createdAt: '2026-03-10T14:20:00Z'
+  }
+];
 
 interface StoreContextType {
   products: Product[];
@@ -21,6 +62,28 @@ interface StoreContextType {
   addProduct: (product: Omit<Product, 'id'>) => void;
   updateProduct: (id: string, product: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
+  editingProduct: Product | null;
+  setEditingProduct: (product: Product | null) => void;
+  isEditProductOpen: boolean;
+  setIsEditProductOpen: (open: boolean) => void;
+
+  // Authentication & Roles
+  currentUser: UserAccount | null;
+  users: UserAccount[];
+  isAuthModalOpen: boolean;
+  setIsAuthModalOpen: (open: boolean) => void;
+  authModalTab: 'login' | 'register' | 'profile' | 'switch-role';
+  setAuthModalTab: (tab: 'login' | 'register' | 'profile' | 'switch-role') => void;
+  login: (identifier: string, password?: string) => { success: boolean; message: string; user?: UserAccount };
+  register: (data: { name: string; email: string; phone: string; password?: string; address?: string; city?: string }) => { success: boolean; message: string; user?: UserAccount };
+  logout: () => void;
+  switchDemoRole: (role: UserRole) => void;
+  updateUserProfile: (data: Partial<UserAccount>) => void;
+  addUser: (data: Omit<UserAccount, 'id' | 'createdAt'>) => void;
+  updateUserRole: (userId: string, role: UserRole) => void;
+  toggleUserActive: (userId: string) => void;
+  deleteUser: (userId: string) => void;
+  userOrders: Order[];
   
   // Cart
   cart: CartItem[];
@@ -129,6 +192,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>(SAMPLE_ORDERS);
   const [storeSettings, setStoreSettings] = useState<StoreSettings>(DEFAULT_STORE_SETTINGS);
+
+  // Authentication & Users
+  const [users, setUsers] = useState<UserAccount[]>(INITIAL_USERS);
+  const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<'login' | 'register' | 'profile' | 'switch-role'>('login');
+
+  // Product Editing Modal State (for quick edit / image change)
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isEditProductOpen, setIsEditProductOpen] = useState(false);
   
   // UI & Modals
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -165,10 +238,183 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       const savedSettings = localStorage.getItem('mh_settings');
       if (savedSettings) setStoreSettings(JSON.parse(savedSettings));
+
+      const savedUsers = localStorage.getItem('mh_users');
+      if (savedUsers) {
+        setUsers(JSON.parse(savedUsers));
+      } else {
+        localStorage.setItem('mh_users', JSON.stringify(INITIAL_USERS));
+      }
+
+      const savedCurrentUser = localStorage.getItem('mh_current_user');
+      if (savedCurrentUser) {
+        setCurrentUser(JSON.parse(savedCurrentUser));
+      }
     } catch (e) {
       console.error('Failed to load local storage state', e);
     }
   }, []);
+
+  // Auth Operations
+  const login = (identifier: string, password?: string) => {
+    const cleanId = identifier.trim().toLowerCase();
+    const cleanPhone = identifier.trim().replace(/\D/g, '');
+
+    const found = users.find((u) => {
+      const uEmail = u.email.toLowerCase();
+      const uPhone = u.phone.replace(/\D/g, '');
+      return uEmail === cleanId || (cleanPhone.length > 0 && uPhone === cleanPhone);
+    });
+
+    if (!found) {
+      return { success: false, message: 'Tài khoản không tồn tại trên hệ thống.' };
+    }
+
+    if (!found.active) {
+      return { success: false, message: 'Tài khoản này đang bị tạm khóa bởi Quản trị viên.' };
+    }
+
+    if (password && found.password && found.password !== password) {
+      return { success: false, message: 'Mật khẩu không chính xác.' };
+    }
+
+    setCurrentUser(found);
+    try {
+      localStorage.setItem('mh_current_user', JSON.stringify(found));
+    } catch (e) {
+      console.error(e);
+    }
+    return { success: true, message: `Chào mừng ${found.name} trở lại!`, user: found };
+  };
+
+  const register = (data: { name: string; email: string; phone: string; password?: string; address?: string; city?: string }) => {
+    const cleanEmail = data.email.trim().toLowerCase();
+    const cleanPhone = data.phone.trim().replace(/\D/g, '');
+
+    const existing = users.find((u) => u.email.toLowerCase() === cleanEmail || u.phone.replace(/\D/g, '') === cleanPhone);
+    if (existing) {
+      return { success: false, message: 'Email hoặc số điện thoại này đã được đăng ký.' };
+    }
+
+    const newUser: UserAccount = {
+      id: `usr-${Date.now()}`,
+      name: data.name.trim(),
+      email: cleanEmail,
+      phone: data.phone.trim(),
+      password: data.password || '123',
+      role: 'user', // Default registered users are regular customers
+      address: data.address?.trim() || '',
+      city: data.city || 'Hà Nội',
+      active: true,
+      createdAt: new Date().toISOString()
+    };
+
+    const updated = [...users, newUser];
+    setUsers(updated);
+    setCurrentUser(newUser);
+    try {
+      localStorage.setItem('mh_users', JSON.stringify(updated));
+      localStorage.setItem('mh_current_user', JSON.stringify(newUser));
+    } catch (e) {
+      console.error(e);
+    }
+
+    return { success: true, message: 'Đăng ký tài khoản thành công!', user: newUser };
+  };
+
+  const logout = () => {
+    setCurrentUser(null);
+    try {
+      localStorage.removeItem('mh_current_user');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const switchDemoRole = (role: UserRole) => {
+    const target = users.find((u) => u.role === role) || INITIAL_USERS.find((u) => u.role === role);
+    if (target) {
+      setCurrentUser(target);
+      try {
+        localStorage.setItem('mh_current_user', JSON.stringify(target));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const updateUserProfile = (data: Partial<UserAccount>) => {
+    if (!currentUser) return;
+    const updated = { ...currentUser, ...data };
+    setCurrentUser(updated);
+    const updatedUsers = users.map((u) => (u.id === currentUser.id ? updated : u));
+    setUsers(updatedUsers);
+    try {
+      localStorage.setItem('mh_current_user', JSON.stringify(updated));
+      localStorage.setItem('mh_users', JSON.stringify(updatedUsers));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const addUser = (data: Omit<UserAccount, 'id' | 'createdAt'>) => {
+    const newUser: UserAccount = {
+      ...data,
+      id: `usr-${Date.now()}`,
+      createdAt: new Date().toISOString()
+    };
+    const updated = [...users, newUser];
+    setUsers(updated);
+    try {
+      localStorage.setItem('mh_users', JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const updateUserRole = (userId: string, role: UserRole) => {
+    const updated = users.map((u) => (u.id === userId ? { ...u, role } : u));
+    setUsers(updated);
+    if (currentUser?.id === userId) {
+      const updatedCur = { ...currentUser, role };
+      setCurrentUser(updatedCur);
+      localStorage.setItem('mh_current_user', JSON.stringify(updatedCur));
+    }
+    try {
+      localStorage.setItem('mh_users', JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const toggleUserActive = (userId: string) => {
+    const updated = users.map((u) => (u.id === userId ? { ...u, active: !u.active } : u));
+    setUsers(updated);
+    try {
+      localStorage.setItem('mh_users', JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const deleteUser = (userId: string) => {
+    const updated = users.filter((u) => u.id !== userId);
+    setUsers(updated);
+    try {
+      localStorage.setItem('mh_users', JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Orders of current logged in user
+  const userOrders = useMemo(() => {
+    if (!currentUser) return [];
+    const phoneDigits = currentUser.phone.replace(/\D/g, '');
+    return orders.filter(
+      (o) => o.userId === currentUser.id || (phoneDigits && o.phone.replace(/\D/g, '') === phoneDigits)
+    );
+  }, [orders, currentUser]);
 
   // Save changes to localStorage
   const updateStoreSettings = (newSettings: StoreSettings) => {
@@ -315,6 +561,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const newOrder: Order = {
       ...orderData,
       id: `MH-${randomCode}`,
+      userId: currentUser?.id,
       orderStatus: 'pending',
       paymentStatus: orderData.paymentMethod === 'cod' ? 'pending' : 'pending',
       createdAt: new Date().toISOString()
@@ -430,6 +677,26 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         addProduct,
         updateProduct,
         deleteProduct,
+        editingProduct,
+        setEditingProduct,
+        isEditProductOpen,
+        setIsEditProductOpen,
+        currentUser,
+        users,
+        isAuthModalOpen,
+        setIsAuthModalOpen,
+        authModalTab,
+        setAuthModalTab,
+        login,
+        register,
+        logout,
+        switchDemoRole,
+        updateUserProfile,
+        addUser,
+        updateUserRole,
+        toggleUserActive,
+        deleteUser,
+        userOrders,
         cart,
         addToCart,
         removeFromCart,

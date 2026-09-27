@@ -15,58 +15,41 @@ interface CeramicArtworkProps {
 
 export function SealStamp({ text = 'Bát Tràng', subtext = 'Cổ Nghệ', className = '' }: { text?: string; subtext?: string; className?: string }) {
   return (
-    <div className={`inline-flex flex-col items-center justify-center p-1.5 border-2 border-[#8B1E1F] bg-[#8B1E1F]/5 text-[#8B1E1F] rounded-xs select-none shadow-[inset_0_0_0_1px_rgba(139,30,31,0.25)] ${className}`}>
-      <span className="text-[10px] font-bold tracking-widest uppercase font-serif leading-none">{text}</span>
-      {subtext && <span className="text-[8px] tracking-wider uppercase font-serif opacity-90 scale-90 leading-none mt-0.5">{subtext}</span>}
+    <div className={`inline-flex flex-col items-center justify-center px-2 py-1 border border-[#C9A24B]/70 bg-[#163845]/85 text-[#E2C67E] rounded-sm select-none ${className}`}>
+      <span className="text-[10px] font-bold tracking-wider uppercase font-sans leading-none">{text}</span>
+      {subtext && <span className="text-[8px] tracking-wider uppercase font-sans opacity-90 leading-none mt-0.5">{subtext}</span>}
     </div>
   );
 }
 
 export function OrientalOrnament({ className = '' }: { className?: string }) {
   return (
-    <div className={`flex items-center justify-center gap-2 text-[#C5A059] ${className}`}>
-      <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-[#C5A059]" />
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
+    <div className={`flex items-center justify-center gap-2 text-[#C9A24B] ${className}`}>
+      <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-[#C9A24B]" />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
         <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" />
       </svg>
-      <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-[#C5A059]" />
+      <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-[#C9A24B]" />
     </div>
   );
 }
 
 export function CloudLotusDivider({ title, subtitle, className = '' }: { title?: string; subtitle?: string; className?: string }) {
   return (
-    <div className={`text-center my-6 flex flex-col items-center ${className}`}>
+    <div className={`text-center my-4 flex flex-col items-center ${className}`}>
       <div className="flex items-center justify-center gap-3">
-        {/* Left Cloud Flourish */}
-        <svg width="36" height="16" viewBox="0 0 48 20" fill="none" className="text-[#C5A059]/70">
-          <path d="M46 10C36 10 32 4 24 4C16 4 14 12 6 12C2 12 0 16 0 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          <circle cx="24" cy="4" r="2.5" fill="currentColor" />
-        </svg>
-        
-        {/* Lotus Icon */}
-        <div className="w-8 h-8 rounded-full border border-[#C5A059]/50 flex items-center justify-center bg-[#FAF7F2] text-[#8B1E1F] shadow-xs">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 3C12 3 8 8 8 13C8 16 10 18 12 18C14 18 16 16 16 13C16 8 12 3 12 3Z" />
-            <path d="M12 18C8.5 18 5 15.5 5 12C5 9.5 7 7.5 7 7.5C7 7.5 5.5 11 7 14C8.5 17 12 18 12 18Z" opacity="0.7" />
-            <path d="M12 18C15.5 18 19 15.5 19 12C19 9.5 17 7.5 17 7.5C17 7.5 18.5 11 17 14C15.5 17 12 18 12 18Z" opacity="0.7" />
-          </svg>
-        </div>
-
-        {/* Right Cloud Flourish */}
-        <svg width="36" height="16" viewBox="0 0 48 20" fill="none" className="text-[#C5A059]/70 scale-x-[-1]">
-          <path d="M46 10C36 10 32 4 24 4C16 4 14 12 6 12C2 12 0 16 0 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          <circle cx="24" cy="4" r="2.5" fill="currentColor" />
-        </svg>
+        <span className="w-10 h-[1px] bg-gradient-to-r from-transparent to-[#C9A24B]" />
+        <span className="w-2 h-2 rotate-45 bg-[#C9A24B]" />
+        <span className="w-10 h-[1px] bg-gradient-to-l from-transparent to-[#C9A24B]" />
       </div>
       
       {title && (
-        <h3 className="font-serif text-2xl md:text-3xl font-bold tracking-wide text-[#2A2421] mt-3">
+        <h2 className="font-serif text-2xl md:text-3xl font-bold text-[#142228] mt-2.5">
           {title}
-        </h3>
+        </h2>
       )}
       {subtitle && (
-        <p className="text-sm md:text-base text-[#8C6D27] italic mt-1 font-serif max-w-xl">
+        <p className="text-xs md:text-sm text-[#526872] mt-1 font-sans max-w-lg">
           {subtitle}
         </p>
       )}
@@ -80,7 +63,7 @@ export function CeramicArtwork({
   badgeText,
   className = '',
   imageUrl,
-  showSeal = true
+  showSeal = false
 }: CeramicArtworkProps) {
   if (imageUrl) {
     return (
@@ -104,58 +87,58 @@ export function CeramicArtwork({
     switch (glaze) {
       case 'men-lam':
         return {
-          bgGrad: 'from-[#F0F4F8] via-[#E2EAF2] to-[#D0DDEB]',
-          primaryColor: '#162E4A',
-          accentColor: '#2B5885',
-          goldAccent: '#C5A059',
-          bodyGrad: ['#F7FAFC', '#E2ECF7', '#C2D7ED'],
-          borderStyle: '#1E3A8A'
+          bgGrad: 'from-[#E5EFF2] via-[#D8E7EC] to-[#C8DCE3]',
+          primaryColor: '#163845',
+          accentColor: '#2C5F6F',
+          goldAccent: '#C9A24B',
+          bodyGrad: ['#F4F9FA', '#DCEBF0', '#BDD6DF'],
+          borderStyle: '#2C5F6F'
         };
       case 'men-ngoc':
         return {
-          bgGrad: 'from-[#F2F8F6] via-[#E1EFEA] to-[#C9E3DA]',
-          primaryColor: '#1B4636',
-          accentColor: '#2A6650',
-          goldAccent: '#D4AF37',
-          bodyGrad: ['#F4FAF7', '#D1EAE1', '#A8D5C4'],
-          borderStyle: '#1B4636'
+          bgGrad: 'from-[#E3F0EE] via-[#D2E7E3] to-[#BDDBD5]',
+          primaryColor: '#1B463B',
+          accentColor: '#2C5F6F',
+          goldAccent: '#C9A24B',
+          bodyGrad: ['#F2FAF8', '#CEEAE4', '#A6D4CA'],
+          borderStyle: '#1B463B'
         };
       case 'men-hoa-bien':
         return {
-          bgGrad: 'from-[#1A1E2E] via-[#16213E] to-[#0F172A]',
-          primaryColor: '#38BDF8',
-          accentColor: '#A855F7',
-          goldAccent: '#F59E0B',
-          bodyGrad: ['#283554', '#1E293B', '#0E1726'],
-          borderStyle: '#38BDF8'
+          bgGrad: 'from-[#16323D] via-[#1E4452] to-[#122831]',
+          primaryColor: '#4A8194',
+          accentColor: '#2C5F6F',
+          goldAccent: '#E2C67E',
+          bodyGrad: ['#2C5F6F', '#1E4452', '#122A34'],
+          borderStyle: '#C9A24B'
         };
       case 'men-tu-sa':
         return {
-          bgGrad: 'from-[#FDF7F2] via-[#F5E7DB] to-[#E9D3C0]',
+          bgGrad: 'from-[#F4EFE6] via-[#EAE0CE] to-[#DECton]',
           primaryColor: '#78350F',
           accentColor: '#92400E',
-          goldAccent: '#B45309',
+          goldAccent: '#C9A24B',
           bodyGrad: ['#8C3A16', '#6E2A0C', '#4D1D06'],
           borderStyle: '#92400E'
         };
       case 'men-tro':
         return {
-          bgGrad: 'from-[#F9F7F3] via-[#EFEBE4] to-[#DDD7CE]',
-          primaryColor: '#4A5568',
-          accentColor: '#718096',
-          goldAccent: '#C5A059',
-          bodyGrad: ['#E6E2DA', '#CBC4B7', '#A39C8E'],
-          borderStyle: '#718096'
+          bgGrad: 'from-[#EBF0F0] via-[#DFE6E6] to-[#CFD8D8]',
+          primaryColor: '#2C5F6F',
+          accentColor: '#526872',
+          goldAccent: '#C9A24B',
+          bodyGrad: ['#E6ECEC', '#C8D4D4', '#9FB0B0'],
+          borderStyle: '#526872'
         };
       case 'men-ran':
       default:
         return {
-          bgGrad: 'from-[#FBF8F2] via-[#F4EDE0] to-[#EADECB]',
-          primaryColor: '#8B1E1F',
-          accentColor: '#C5A059',
-          goldAccent: '#DAA520',
-          bodyGrad: ['#F7F2E7', '#EDE3CF', '#D9CBB0'],
-          borderStyle: '#8C6D27'
+          bgGrad: 'from-[#EAEFE9] via-[#E5ECE6] to-[#E6DFC8]',
+          primaryColor: '#2C5F6F',
+          accentColor: '#C9A24B',
+          goldAccent: '#C9A24B',
+          bodyGrad: ['#F5F3EB', '#E6E2D3', '#D2C9B0'],
+          borderStyle: '#9B7832'
         };
     }
   };
@@ -163,36 +146,29 @@ export function CeramicArtwork({
   const theme = getGlazeThemes();
 
   return (
-    <div className={`relative w-full h-full min-h-[260px] flex items-center justify-center overflow-hidden bg-gradient-to-b ${theme.bgGrad} p-4 rounded-t-sm group select-none ${className}`}>
-      {/* Background Subtle Ceramic Crackle / Cloud Aura */}
-      <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#C5A059_1px,transparent_1px)] [background-size:16px_16px]" />
+    <div className={`relative w-full h-full flex items-center justify-center overflow-hidden bg-gradient-to-b ${theme.bgGrad} p-3 group select-none ${className}`}>
+      {/* Background Subtle Ceramic Crackle */}
+      <div className="absolute inset-0 crackle-overlay opacity-45 pointer-events-none" />
       
       {/* Soft Glow Spotlight */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-white/40 blur-2xl pointer-events-none" />
-
-      {/* Traditional Corner Accents */}
-      <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[#C5A059]/60 pointer-events-none" />
-      <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[#C5A059]/60 pointer-events-none" />
-      <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[#C5A059]/60 pointer-events-none" />
-      <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[#C5A059]/60 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 rounded-full bg-white/50 blur-2xl pointer-events-none" />
 
       {/* Traditional Seal Stamp */}
       {showSeal && (
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-2.5 right-2.5 z-10">
           <SealStamp text="Bát Tràng" subtext={glaze === 'men-ran' ? 'Men Rạn' : glaze === 'men-lam' ? 'Men Lam' : 'Thủ Công'} />
         </div>
       )}
 
       {/* Badge if present */}
       {badgeText && (
-        <div className="absolute top-3 left-3 z-10 px-2 py-0.5 text-[11px] font-medium tracking-wide bg-[#8B1E1F] text-[#FDF8F0] shadow-sm flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520] animate-pulse" />
+        <div className="absolute top-2.5 left-2.5 z-10 px-2.5 py-0.5 text-[10px] font-sans font-semibold tracking-wide bg-[#163845]/90 text-[#E2C67E] border border-[#C9A24B]/40 rounded-full shadow-xs">
           {badgeText}
         </div>
       )}
 
-      {/* Ceramic Artwork SVG based on type */}
-      <div className="relative z-0 w-44 h-48 md:w-52 md:h-56 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+      {/* Ceramic Artwork SVG based on type - Scaled up to spotlight the ceramic piece */}
+      <div className="relative z-0 w-[84%] h-[84%] max-w-[340px] max-h-[340px] flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
         {type === 'bat-huong' && (
           <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_12px_16px_rgba(42,36,33,0.22)]">
             <defs>

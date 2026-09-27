@@ -344,7 +344,7 @@ export const REVIEWS = [
     productName: 'Bát Hương Men Rạn Dát Vàng Song Long',
     rating: 5,
     date: '18/09/2026',
-    comment: 'Tôi cẩn thận đặt ban thờ gia tiên nên đến tận xưởng Minh Huyền ở Bát Tràng xem. Gốm men rạn rất đanh, tiếng gõ vang thanh, nét rồng đắp nổi uy nghiêm và dát vàng thật rất sáng. Vợ chồng chủ tiệm đón tiếp rất nhã nhặn và có tâm.',
+    comment: 'Gốm men dạn rất đanh, tiếng gõ vang thanh, nét rồng đắp nổi uy nghiêm và dát vàng 24K rất sáng.',
     verified: true
   },
   {
@@ -354,7 +354,7 @@ export const REVIEWS = [
     productName: 'Bình Hút Lộc Thuận Buồm Xuôi Gió',
     rating: 5,
     date: '14/09/2026',
-    comment: 'Giao hàng vào Sài Gòn đóng thùng xốp gỗ 3 lớp cực kỳ cẩn thận, mở ra không hề có 1 vết trầy xước. Bình đặt phòng khách sáng bừng cả căn nhà. Bạn bè đối tác ai đến chơi cũng trầm trồ khen ngợi nét men ngọc bích.',
+    comment: 'Bình hút lộc men ngọc lam đặt phòng khách sang trọng, đóng kiện gỗ 3 lớp giao vào Sài Gòn an toàn tuyệt đối.',
     verified: true
   },
   {
@@ -364,7 +364,7 @@ export const REVIEWS = [
     productName: 'Bộ Ấm Chén Men Rạn Bọc Đồng Trúc Lâm',
     rating: 5,
     date: '10/09/2026',
-    comment: 'Mua tặng sinh nhật bố tôi, ông là người sành trà lâu năm mà cũng phải gật đầu ưng ý. Ấm rót tròn dòng không bị rớt nước, viền đồng sáng bóng sang trọng. Cảm ơn xưởng gốm Minh Huyền!',
+    comment: 'Ấm trà rót tròn dòng không rớt nước, sắc men dạn ngọc lam viền đồng cổ điển vô cùng tinh xảo.',
     verified: true
   }
 ];

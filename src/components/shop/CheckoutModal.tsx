@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '@/context/StoreContext';
 import { 
   X, 
@@ -12,7 +12,8 @@ import {
   CheckCircle2, 
   ArrowLeft,
   PhoneCall,
-  Lock
+  Lock,
+  UserCheck
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PaymentMethod } from '@/types';
@@ -27,7 +28,8 @@ export default function CheckoutModal() {
     shippingFee, 
     cartFinalTotal,
     createOrder,
-    storeSettings 
+    storeSettings,
+    currentUser 
   } = useStore();
 
   const [formData, setFormData] = useState({
@@ -37,6 +39,18 @@ export default function CheckoutModal() {
     city: 'Hà Nội',
     note: ''
   });
+
+  useEffect(() => {
+    if (currentUser && isCheckoutOpen) {
+      setFormData((prev) => ({
+        ...prev,
+        customerName: currentUser.name || prev.customerName,
+        phone: currentUser.phone || prev.phone,
+        address: currentUser.address || prev.address,
+        city: currentUser.city || prev.city || 'Hà Nội'
+      }));
+    }
+  }, [currentUser, isCheckoutOpen]);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,7 +147,14 @@ export default function CheckoutModal() {
                 <span className="font-serif font-bold text-xs sm:text-sm text-[#8B1E1F] uppercase tracking-wider">
                   1. Thông Tin Người Nhận
                 </span>
-                <span className="text-[11px] text-[#8C6D27] font-serif">Bảo mật thông tin</span>
+                {currentUser ? (
+                  <span className="text-[11px] text-[#2C5F6F] font-sans font-medium flex items-center gap-1">
+                    <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Tự điền từ tài khoản</span>
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-[#8C6D27] font-serif">Bảo mật thông tin</span>
+                )}
               </div>
 
               <div>

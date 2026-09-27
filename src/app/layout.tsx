@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="vi"
       className={`${playfair.variable} ${beVietnam.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-[#FAF7F2] text-[#2A2421] selection:bg-[#B8860B]/20 selection:text-[#8B1E1F]">
+      <body className="min-h-full flex flex-col font-sans bg-[#E6F0F2] text-[#18262C] selection:bg-[#C9A24B]/30 selection:text-[#163845]">
         {children}
       </body>
     </html>

@@ -1,63 +1,62 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { REVIEWS } from '@/data/products';
-import { CloudLotusDivider } from '@/components/common/CeramicArtwork';
-import { Star, ShieldCheck, Quote } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Testimonials() {
+  const [index, setIndex] = useState(0);
+  const current = REVIEWS[index] || REVIEWS[0];
+
   return (
-    <section className="py-16 bg-[#F4ECE1] border-b border-[#C5A059]/40 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <CloudLotusDivider
-          title="Khách Hàng Khắp Mọi Miền Chia Sẻ"
-          subtitle="Hơn 10.000 gia đình trên khắp 63 tỉnh thành đã tin tưởng trao trọn niềm tin cho đồ gốm Minh Huyền Bát Tràng"
-        />
+    <section className="py-12 bg-men-dan-surface crackle-overlay border-b border-[#2C5F6F]/15">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+        
+        <h2 className="font-serif text-2xl font-bold text-[#142228] mb-5">
+          Khách Hàng Đánh Giá
+        </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-          {REVIEWS.map((rev) => (
-            <div
-              key={rev.id}
-              className="bg-white p-6 border border-[#C5A059]/40 rounded-xs shadow-xs flex flex-col justify-between relative oriental-border-corner"
-            >
-              <Quote className="w-8 h-8 text-[#C5A059]/30 absolute top-4 right-4" />
+        <div className="bg-white/95 p-6 sm:p-8 rounded-2xl border border-[#C9A24B]/40 shadow-soft relative">
+          <div className="flex justify-center text-[#C9A24B] mb-3">
+            {[...Array(current.rating)].map((_, i) => (
+              <Star key={i} className="w-4 h-4 fill-current" />
+            ))}
+          </div>
 
-              <div>
-                {/* Rating stars */}
-                <div className="flex text-[#DAA520] mb-3">
-                  {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
+          <p className="text-sm sm:text-base text-[#142228] font-sans leading-relaxed max-w-xl mx-auto line-clamp-2">
+            &ldquo;{current.comment}&rdquo;
+          </p>
 
-                {/* Comment */}
-                <p className="text-xs sm:text-sm text-[#2A2421] font-serif leading-relaxed italic">
-                  &ldquo;{rev.comment}&rdquo;
-                </p>
-              </div>
-
-              {/* Author & Verification */}
-              <div className="mt-5 pt-4 border-t border-[#C5A059]/20 flex items-center justify-between">
-                <div>
-                  <div className="font-serif font-bold text-xs sm:text-sm text-[#181412]">
-                    {rev.customerName}
-                  </div>
-                  <div className="text-[11px] text-[#8C6D27] font-serif">
-                    {rev.location}
-                  </div>
-                  <div className="text-[10px] text-[#8B1E1F] font-serif font-medium mt-0.5">
-                    Đã mua: {rev.productName}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1 text-[10px] text-[#1E4638] bg-[#D8F3DC] px-2 py-0.5 rounded-full font-serif font-medium">
-                  <ShieldCheck className="w-3 h-3" />
-                  <span>Đã mua hàng</span>
-                </div>
-              </div>
+          <div className="mt-4 pt-3 border-t border-[#2C5F6F]/10">
+            <div className="font-sans font-bold text-sm text-[#163845]">
+              {current.customerName}
             </div>
-          ))}
+            <div className="text-xs text-[#526872] font-sans mt-0.5">
+              {current.location} • {current.productName}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 mt-4">
+            <button
+              onClick={() => setIndex((prev) => (prev - 1 + REVIEWS.length) % REVIEWS.length)}
+              className="p-1.5 rounded-full border border-[#2C5F6F]/25 text-[#2C5F6F] hover:bg-[#2C5F6F] hover:text-white transition-colors"
+              aria-label="Trước"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="text-xs font-sans font-medium text-[#526872] tabular-nums">
+              {index + 1} / {REVIEWS.length}
+            </span>
+            <button
+              onClick={() => setIndex((prev) => (prev + 1) % REVIEWS.length)}
+              className="p-1.5 rounded-full border border-[#2C5F6F]/25 text-[#2C5F6F] hover:bg-[#2C5F6F] hover:text-white transition-colors"
+              aria-label="Sau"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
+
       </div>
     </section>
   );

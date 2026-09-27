@@ -4,6 +4,21 @@ export type CeramicCategory = 'dotho' | 'amtra' | 'binhhutloc' | 'locbinh' | 'gi
 
 export type FengShuiElement = 'Kim' | 'Mộc' | 'Thủy' | 'Hỏa' | 'Thổ' | 'Hòa Hợp Tất Cả Mệnh';
 
+export type UserRole = 'admin' | 'manager' | 'user';
+
+export interface UserAccount {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  password?: string;
+  role: UserRole;
+  address?: string;
+  city?: string;
+  createdAt: string;
+  active: boolean;
+}
+
 export type IllustrationType = 
   | 'bat-huong'
   | 'am-chen'
@@ -48,6 +63,7 @@ export interface CategoryInfo {
   description: string;
   itemCount: number;
   illustrationType: IllustrationType;
+  imageUrl?: string;
   badge: string;
 }
 
@@ -62,6 +78,7 @@ export type OrderStatus = 'pending' | 'confirmed' | 'shipping' | 'completed' | '
 
 export interface Order {
   id: string;
+  userId?: string;
   customerName: string;
   phone: string;
   address: string;

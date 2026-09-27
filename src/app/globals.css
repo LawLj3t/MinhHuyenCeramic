@@ -1,175 +1,168 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-sans: var(--font-be-vietnam), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, Cambria, "Times New Roman", serif;
+}
+
 :root {
-  --font-serif-family: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-serif-family: var(--font-playfair), Georgia, Cambria, serif;
   --font-sans-family: var(--font-be-vietnam), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  
-  --ceramic-clay: #FAF7F2;
-  --ceramic-parchment: #F5EFEB;
-  --ceramic-sand: #EAE1D2;
-  --ceramic-charcoal: #2A2421;
-  --ceramic-ink: #181412;
-  --ceramic-gold: #C5A059;
-  --ceramic-gold-light: #DFBF7C;
-  --ceramic-gold-dark: #8C6D27;
-  --ceramic-red: #8B1E1F;
-  --ceramic-red-light: #B2282A;
-  --ceramic-red-dark: #5C1213;
-  --ceramic-blue: #162E4A;
-  --ceramic-blue-light: #2A4E7A;
-  --ceramic-jade: #1E4638;
-  
-  --shadow-soft: 0 2px 8px rgba(42, 36, 33, 0.08);
-  --shadow-medium: 0 4px 16px rgba(42, 36, 33, 0.12);
-  --shadow-strong: 0 8px 32px rgba(42, 36, 33, 0.16);
-  --shadow-glow-gold: 0 0 24px rgba(197, 160, 89, 0.3);
-  --shadow-glow-red: 0 0 24px rgba(139, 30, 31, 0.25);
+
+  /* Bảng màu Men Dạn Xanh Nước Biển (#2C5F6F) & Vàng Trầm (#C9A24B) */
+  --celadon-deep: #163845;       /* Xanh nước biển trầm đậm */
+  --celadon-dark: #1E4959;       /* Xanh ngọc lam đậm */
+  --celadon-main: #2C5F6F;       /* Xanh nước biển men dạn chủ đạo */
+  --celadon-light: #4A8194;      /* Xanh lam ngọc sáng */
+  --celadon-mist: #DFECEF;       /* Nền men lam ngọc dịu */
+
+  --bronze-deep: #7A5C1D;        /* Vàng trầm cổ đậm */
+  --bronze-dark: #9B7832;        /* Vàng đồng trầm */
+  --bronze-main: #C9A24B;        /* Vàng trầm ánh đồng chủ đạo */
+  --bronze-light: #E2C67E;       /* Vàng kem ánh kim */
+  --bronze-mist: #EFE9D8;        /* Nền men vàng trầm dịu */
+
+  --ceramic-ink: #142228;        /* Chữ chính xanh than đậm */
+  --ceramic-charcoal: #243740;   /* Chữ nội dung */
+  --ceramic-muted: #526872;      /* Chữ phụ */
+
+  --shadow-soft: 0 4px 16px rgba(22, 56, 69, 0.08);
+  --shadow-medium: 0 8px 28px rgba(22, 56, 69, 0.14);
+  --shadow-strong: 0 16px 44px rgba(22, 56, 69, 0.22);
 }
 
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 }
 
 body {
-  background: linear-gradient(to bottom, #FAF7F2 0%, #F5EFEB 50%, #EAE1D2 100%);
+  background: linear-gradient(160deg, #DDECEF 0%, #E8ECE6 45%, #ECE4D0 100%);
   color: var(--ceramic-charcoal);
   font-family: var(--font-sans-family);
+  font-feature-settings: "kern" 1, "liga" 1;
+  line-height: 1.6;
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6, .font-serif-title {
+/* Chuẩn hóa Typography: Chỉ dùng Serif cho tiêu đề lớn, giữ line-height thoáng cho dấu tiếng Việt */
+h1, h2, h3, .font-serif-title {
   font-family: var(--font-serif-family);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  line-height: 1.28;
 }
 
-/* Smooth Animations */
+/* Toàn bộ nút bấm, nhãn, giá tiền, điều hướng dùng Sans-serif đồng nhất để không bị rối hoặc lệch dòng */
+button, input, select, textarea, nav, .font-ui {
+  font-family: var(--font-sans-family);
+  letter-spacing: 0;
+}
+
+.price-text {
+  font-family: var(--font-sans-family);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Nền Men Dạn Xanh Nước Biển Vàng Trầm (Dark Hero / Heritage) */
+.bg-men-dan-deep {
+  background-color: #1B4352;
+  background-image:
+    radial-gradient(circle at 80% 20%, rgba(201, 162, 75, 0.28) 0%, transparent 45%),
+    radial-gradient(circle at 15% 80%, rgba(74, 129, 148, 0.35) 0%, transparent 50%),
+    linear-gradient(135deg, #153542 0%, #2C5F6F 55%, #3A5A53 85%, #6E5B33 100%);
+  position: relative;
+}
+
+/* Nền Men Dạn Xanh Lam Pha Vàng Trầm (Light Section Background) */
+.bg-men-dan-surface {
+  background-color: #E2EEF0;
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(44, 95, 111, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(201, 162, 75, 0.16) 0%, transparent 45%),
+    linear-gradient(145deg, #DFECEF 0%, #EAEFE9 50%, #EFE7D4 100%);
+  position: relative;
+}
+
+.bg-men-dan-warm {
+  background-color: #EDE6D5;
+  background-image:
+    radial-gradient(circle at 85% 20%, rgba(44, 95, 111, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 15% 80%, rgba(201, 162, 75, 0.18) 0%, transparent 45%),
+    linear-gradient(145deg, #EFE8D8 0%, #E6EDE9 55%, #DCEAEF 100%);
+  position: relative;
+}
+
+/* Hiệu ứng vân Men Rạn cổ truyền (SVG Crackle Pattern) */
+.crackle-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C9A24B' stroke-width='0.6' stroke-opacity='0.22'%3E%3Cpath d='M0 28 L38 42 L64 14 L102 32 L120 18 M38 42 L29 84 L0 96 M64 14 L76 58 L120 68 M76 58 L52 92 L68 120 M29 84 L52 92 M102 32 L94 74 L120 104 M22 0 L38 42 M0 58 L29 84'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* Animations mượt mà */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-30px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(197, 160, 89, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(197, 160, 89, 0.6); }
-}
-
 .animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-.animate-slide-in-left {
-  animation: slideInLeft 0.6s ease-out forwards;
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.6s ease-out forwards;
+  animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.4s ease-out forwards;
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Traditional Oriental Seal Stamp (Dấu Triện Chu Sa) */
+/* Con dấu Triện Nghệ Nhân */
 .seal-stamp {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--ceramic-red);
-  background-color: rgba(139, 30, 31, 0.06);
-  color: var(--ceramic-red);
-  font-family: var(--font-serif-family);
+  border: 1.5px solid var(--celadon-main);
+  background-color: rgba(44, 95, 111, 0.06);
+  color: var(--celadon-main);
+  font-family: var(--font-sans-family);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  position: relative;
-  box-shadow: inset 0 0 0 1px rgba(139, 30, 31, 0.3);
+  letter-spacing: 0.08em;
   user-select: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.seal-stamp:hover {
-  transform: scale(1.05);
-  box-shadow: inset 0 0 0 1px rgba(139, 30, 31, 0.5), var(--shadow-glow-red);
-}
-
-.seal-stamp::before {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border: 1px dashed rgba(139, 30, 31, 0.4);
-  pointer-events: none;
-}
-
-/* Gold Gradient Shimmer with Animation */
 .text-gold-gradient {
-  background: linear-gradient(135deg, #B38728 0%, #FBF5B7 40%, #DAA520 70%, #AA771C 100%);
-  background-size: 200% 200%;
+  background: linear-gradient(135deg, #B58D3D 0%, #E5C77A 50%, #9B7527 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 3s linear infinite;
 }
 
 .bg-gold-gradient {
-  background: linear-gradient(135deg, #B38728 0%, #D4AF37 50%, #8C6D27 100%);
-  background-size: 200% 200%;
-  transition: background-position 0.5s ease;
+  background: linear-gradient(135deg, #C9A24B 0%, #DFBF7C 50%, #9B7832 100%);
 }
 
-.bg-gold-gradient:hover {
-  background-position: 100% 50%;
+.bg-celadon-gradient {
+  background: linear-gradient(135deg, #163845 0%, #2C5F6F 55%, #3D7588 100%);
 }
 
-.border-gold-gradient {
-  border-image: linear-gradient(to right, #B38728, #FBF5B7, #DAA520) 1;
-}
-
-/* Glassmorphism Effect */
 .glass-morph {
-  background: rgba(250, 247, 242, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(197, 160, 89, 0.2);
+  background: rgba(244, 248, 249, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(201, 162, 75, 0.35);
 }
 
 .glass-morph-dark {
-  background: rgba(42, 36, 33, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(197, 160, 89, 0.3);
+  background: rgba(22, 56, 69, 0.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(201, 162, 75, 0.4);
 }
 
-/* Oriental Traditional Pattern Border */
 .oriental-border-corner {
   position: relative;
 }
@@ -177,124 +170,44 @@ h1, h2, h3, h4, h5, h6, .font-serif-title {
 .oriental-border-corner::after {
   content: "";
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 2px solid #C5A059;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--bronze-main);
   pointer-events: none;
   transition: all 0.3s ease;
 }
 .oriental-border-corner::before {
-  top: -2px;
-  left: -2px;
+  top: -1px;
+  left: -1px;
   border-right: none;
   border-bottom: none;
 }
 .oriental-border-corner::after {
-  bottom: -2px;
-  right: -2px;
+  bottom: -1px;
+  right: -1px;
   border-left: none;
   border-top: none;
 }
-.oriental-border-corner:hover::before,
-.oriental-border-corner:hover::after {
-  border-color: #8B1E1F;
-  width: 18px;
-  height: 18px;
-}
 
-/* Subtle Ceramic Men Rạn (Crackled Glaze) Texture */
-.texture-crackle {
-  background-image: radial-gradient(rgba(197, 160, 89, 0.12) 1px, transparent 0);
-  background-size: 20px 20px;
-  position: relative;
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
-
-.texture-crackle::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(45deg, transparent 48%, rgba(197, 160, 89, 0.03) 49%, rgba(197, 160, 89, 0.03) 51%, transparent 52%);
-  background-size: 40px 40px;
-  pointer-events: none;
-}
-
-/* Enhanced Shadow Utilities */
-.shadow-2xs {
-  box-shadow: var(--shadow-soft);
-}
-
-.shadow-xs {
+.hover-lift:hover {
+  transform: translateY(-4px);
   box-shadow: var(--shadow-medium);
 }
 
-.shadow-glow-gold {
-  box-shadow: var(--shadow-glow-gold);
-}
-
-.shadow-glow-red {
-  box-shadow: var(--shadow-glow-red);
-}
-
-/* Smooth Transitions */
-.transition-smooth {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.transition-bounce {
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Hover Lift Effect */
-.hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-strong);
-}
-
-/* Skeleton Loader */
-@keyframes skeleton-loading {
-  0% { background-position: -200px 0; }
-  100% { background-position: calc(200px + 100%) 0; }
-}
-
-.skeleton {
-  background: linear-gradient(90deg, #F5EFEB 0px, #DFBF7C 40px, #F5EFEB 80px);
-  background-size: 200px 100%;
-  animation: skeleton-loading 1.4s ease-in-out infinite;
-}
-
-/* Scrollbar Enhancements */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  background: linear-gradient(to bottom, #F4ECE1, #EAE1D2);
-  border-radius: 5px;
+  background: #DFECEF;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #C5A059, #8C6D27);
-  border-radius: 5px;
-  border: 2px solid #F4ECE1;
-  transition: background 0.3s ease;
+  background: #2C5F6F;
+  border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #8B1E1F, #5C1213);
-}
-
-/* Selection Highlight */
-::selection {
-  background: rgba(197, 160, 89, 0.3);
-  color: var(--ceramic-ink);
-}
-
-::-moz-selection {
-  background: rgba(197, 160, 89, 0.3);
-  color: var(--ceramic-ink);
+  background: #163845;
 }
