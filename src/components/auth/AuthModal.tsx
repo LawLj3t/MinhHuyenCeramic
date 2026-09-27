@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useStore } from '@/context/StoreContext';
 import { 
   X, 
@@ -21,47 +22,10 @@ import {
   Eye,
   EyeOff,
   KeyRound,
-  LogIn
+  LogIn,
+  ExternalLink
 } from 'lucide-react';
 import { UserRole } from '@/types';
-
-const DEMO_ACCOUNTS: {
-  role: UserRole;
-  badge: string;
-  title: string;
-  email: string;
-  phone: string;
-  password: string;
-  desc: string;
-}[] = [
-  {
-    role: 'admin',
-    badge: '👑 Role 1: Admin',
-    title: 'Chủ Cửa Hàng (Toàn Quyền)',
-    email: 'admin@minhhuyen.vn',
-    phone: '0988686888',
-    password: '123',
-    desc: 'Quản lý doanh thu, duyệt đơn, thêm/xóa sản phẩm, đổi ảnh thật, phân quyền nhân viên & VietQR.'
-  },
-  {
-    role: 'manager',
-    badge: '💼 Role 2: Manager',
-    title: 'Nhân Viên Bán Hàng & Kho',
-    email: 'banhang@minhhuyen.vn',
-    phone: '0912888999',
-    password: '123',
-    desc: 'Tiếp nhận đơn hàng, cập nhật giá bán, tồn kho và tải/đổi ảnh thật cho sản phẩm.'
-  },
-  {
-    role: 'user',
-    badge: '🛍️ Role 3: User',
-    title: 'Khách Mua Hàng',
-    email: 'khachhang@gmail.com',
-    phone: '0912345678',
-    password: '123',
-    desc: 'Đặt mua gốm sứ, tự động điền thông tin thanh toán và theo dõi lịch sử đơn hàng cá nhân.'
-  }
-];
 
 export default function AuthModal() {
   const { 
@@ -122,27 +86,6 @@ export default function AuthModal() {
       }, 700);
     } else {
       setMessage({ type: 'error', text: res.message });
-    }
-  };
-
-  const handleFillDemoAccount = (email: string, password: string, roleTitle: string) => {
-    setAuthModalTab('login');
-    setLoginForm({ identifier: email, password });
-    setMessage({
-      type: 'success',
-      text: `Đã điền tài khoản ${roleTitle}. Hãy bấm nút "Đăng Nhập Hệ Thống" bên dưới!`
-    });
-  };
-
-  const handleDirectDemoLogin = (email: string, password: string) => {
-    setLoginForm({ identifier: email, password });
-    const res = login(email, password);
-    if (res.success) {
-      setMessage({ type: 'success', text: res.message });
-      setTimeout(() => {
-        setAuthModalTab('profile');
-        setMessage(null);
-      }, 600);
     }
   };
 
@@ -217,12 +160,12 @@ export default function AuthModal() {
             </div>
             <div>
               <h3 className="font-serif font-bold text-base sm:text-lg text-white leading-tight">
-                Đăng Nhập & Tài Khoản Minh Huyền Ceramic
+                Tài Khoản & Hồ Sơ Minh Huyền Ceramic
               </h3>
               <p className="text-[11px] text-[#E2C67E] font-sans mt-0.5">
                 {currentUser 
                   ? `Đang đăng nhập: ${currentUser.name} (${currentUser.email})` 
-                  : 'Đăng nhập bằng tài khoản của bạn hoặc chọn 1 trong 3 tài khoản Demo bên dưới'}
+                  : 'Đăng nhập tài khoản cá nhân để theo dõi đơn hàng và ưu đãi'}
               </p>
             </div>
           </div>
@@ -236,7 +179,7 @@ export default function AuthModal() {
           </button>
         </div>
 
-        {/* Navigation Tabs (Always visible so user can access Login form anytime) */}
+        {/* Navigation Tabs */}
         <div className="flex border-b border-[#2C5F6F]/20 bg-white px-4">
           <button
             type="button"
@@ -248,7 +191,7 @@ export default function AuthModal() {
             }`}
           >
             <LogIn className="w-3.5 h-3.5" />
-            <span>Đăng Nhập (3 Role Demo)</span>
+            <span>Đăng Nhập</span>
           </button>
 
           <button
@@ -298,12 +241,11 @@ export default function AuthModal() {
 
         <div className="p-4 sm:p-5 space-y-5">
           
-          {/* TAB 1: REAL LOGIN FORM + 3 DEMO ACCOUNTS TABLE */}
+          {/* TAB 1: REAL LOGIN FORM */}
           {activeTab === 'login' && (
-            <div className="space-y-5">
+            <div className="space-y-4">
               
-              {/* Real Login Form */}
-              <form onSubmit={handleLoginSubmit} className="bg-white p-4 rounded-xl border border-[#C9A24B]/40 shadow-xs space-y-3.5 text-xs">
+              <form onSubmit={handleLoginSubmit} className="bg-white p-5 rounded-xl border border-[#C9A24B]/40 shadow-xs space-y-3.5 text-xs">
                 <div className="flex items-center justify-between pb-2 border-b border-[#2C5F6F]/15">
                   <span className="font-serif font-bold text-sm text-[#163845] flex items-center gap-1.5">
                     <KeyRound className="w-4 h-4 text-[#9B7832]" />
@@ -324,7 +266,7 @@ export default function AuthModal() {
                     <Mail className="w-4 h-4 text-[#526872] absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
-                      placeholder="Nhập email (VD: admin@minhhuyen.vn) hoặc SĐT..."
+                      placeholder="Nhập email hoặc số điện thoại..."
                       value={loginForm.identifier}
                       onChange={(e) => setLoginForm({ ...loginForm, identifier: e.target.value })}
                       required
@@ -341,7 +283,7 @@ export default function AuthModal() {
                     <Lock className="w-4 h-4 text-[#526872] absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="Nhập mật khẩu (tài khoản demo là: 123)"
+                      placeholder="Nhập mật khẩu của bạn..."
                       value={loginForm.password}
                       onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                       required
@@ -360,94 +302,32 @@ export default function AuthModal() {
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-lg bg-[#163845] hover:bg-[#2C5F6F] text-white font-semibold text-xs transition-colors shadow-sm flex items-center justify-center gap-2"
+                  className="w-full py-2.5 rounded-lg bg-[#163845] hover:bg-[#2C5F6F] text-white font-semibold text-xs transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <LogIn className="w-4 h-4 text-[#E2C67E]" />
-                  <span>Đăng Nhập Hệ Thống</span>
+                  <span>Đăng Nhập</span>
                 </button>
+
+                <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+                  <button
+                    type="button"
+                    onClick={() => { setAuthModalTab('register'); setMessage(null); }}
+                    className="text-[#163845] hover:text-[#C9A24B] font-semibold hover:underline"
+                  >
+                    Chưa có tài khoản? Đăng ký
+                  </button>
+
+                  <Link
+                    href="/login"
+                    onClick={handleClose}
+                    className="inline-flex items-center gap-1 text-[#2C5F6F] hover:text-[#163845] font-semibold hover:underline"
+                  >
+                    <span>Mở trang đăng nhập riêng</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                </div>
               </form>
 
-              {/* 3 Demo Accounts Box with explicit credentials */}
-              <div className="p-4 bg-gradient-to-b from-[#163845]/8 to-[#C9A24B]/12 border border-[#C9A24B]/50 rounded-xl space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-serif font-bold text-xs sm:text-sm text-[#163845]">
-                      Danh Sách Tài Khoản Demo Của 3 Role
-                    </h4>
-                    <p className="text-[11px] text-[#526872]">
-                      Bấm <strong>"Điền TK"</strong> để điền vào ô đăng nhập ở trên, hoặc <strong>"Đăng nhập ngay"</strong>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-2.5">
-                  {DEMO_ACCOUNTS.map((acc) => {
-                    const isCurrent = currentUser?.role === acc.role;
-                    return (
-                      <div
-                        key={acc.role}
-                        className={`p-3 rounded-lg border transition-all bg-white ${
-                          isCurrent
-                            ? 'border-[#163845] ring-1 ring-[#163845]/30'
-                            : 'border-[#C9A24B]/35 hover:border-[#2C5F6F]'
-                        }`}
-                      >
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded bg-[#163845] text-[#E2C67E] text-[10px] font-bold">
-                              {acc.badge}
-                            </span>
-                            <span className="font-serif font-bold text-xs text-[#142228]">
-                              {acc.title}
-                            </span>
-                            {isCurrent && (
-                              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                                Đang đăng nhập
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-1.5">
-                            <button
-                              type="button"
-                              onClick={() => handleFillDemoAccount(acc.email, acc.password, acc.title)}
-                              className="px-2.5 py-1 rounded border border-[#2C5F6F]/40 hover:border-[#163845] bg-[#FAF7F2] hover:bg-white text-[#163845] text-[11px] font-semibold transition-colors"
-                            >
-                              Điền TK
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDirectDemoLogin(acc.email, acc.password)}
-                              className="px-2.5 py-1 rounded bg-[#2C5F6F] hover:bg-[#163845] text-white text-[11px] font-semibold transition-colors"
-                            >
-                              Đăng nhập ngay
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="mt-2 pt-2 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[11px]">
-                          <div>
-                            <span className="text-[#526872]">Email: </span>
-                            <code className="font-mono font-bold text-[#163845]">{acc.email}</code>
-                          </div>
-                          <div>
-                            <span className="text-[#526872]">SĐT: </span>
-                            <code className="font-mono font-bold text-[#163845]">{acc.phone}</code>
-                          </div>
-                          <div>
-                            <span className="text-[#526872]">Mật khẩu: </span>
-                            <code className="font-mono font-bold text-[#9B7832] bg-[#EFE7D4] px-1.5 py-0.2 rounded">{acc.password}</code>
-                          </div>
-                        </div>
-
-                        <p className="text-[11px] text-[#526872] mt-1.5 leading-snug">
-                          {acc.desc}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
             </div>
           )}
 

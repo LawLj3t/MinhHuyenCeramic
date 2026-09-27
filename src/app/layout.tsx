@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
+import { StoreProvider } from "@/context/StoreContext";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -30,7 +31,9 @@ export default function RootLayout({
       className={`${playfair.variable} ${beVietnam.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[#E6F0F2] text-[#18262C] selection:bg-[#C9A24B]/30 selection:text-[#163845]">
-        {children}
+        <StoreProvider>
+          {children}
+        </StoreProvider>
       </body>
     </html>
   );

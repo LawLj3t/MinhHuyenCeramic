@@ -67,8 +67,7 @@ export default function AdminDashboard() {
     addUser,
     updateUserRole,
     toggleUserActive,
-    deleteUser,
-    switchDemoRole
+    deleteUser
   } = useStore();
 
   const isAdmin = currentUser?.role === 'admin';
@@ -343,12 +342,12 @@ export default function AdminDashboard() {
 
           <div className="flex items-center gap-2">
             {!isAdmin && !isManager && (
-              <button
-                onClick={() => switchDemoRole('admin')}
+              <a
+                href="/admin/login"
                 className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#C9A24B] hover:bg-[#b8913d] text-[#142228] text-xs font-semibold rounded-lg shadow-xs"
               >
-                <span>Bật Quyền Admin</span>
-              </button>
+                <span>Đăng Nhập Quản Trị</span>
+              </a>
             )}
 
             <button

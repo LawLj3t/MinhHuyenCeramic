@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { StoreProvider } from '@/context/StoreContext';
 import Header from '@/components/common/Header';
 import HeroBanner from '@/components/home/HeroBanner';
 import CategoryShowcase from '@/components/home/CategoryShowcase';
@@ -23,30 +22,28 @@ import AuthModal from '@/components/auth/AuthModal';
 
 export default function HomePage() {
   return (
-    <StoreProvider>
-      <div className="min-h-screen flex flex-col bg-men-dan-surface text-[#243740] font-sans">
-        <Header />
+    <div className="min-h-screen flex flex-col bg-men-dan-surface text-[#243740] font-sans">
+      <Header />
 
-        <main className="flex-1">
-          <HeroBanner />
-          <CategoryShowcase />
-          <ProductGrid />
-          <ArtisanStory />
-          <CraftingProcess />
-          <BlogSection />
-          <Testimonials />
-        </main>
+      <main className="flex-1">
+        <HeroBanner />
+        <CategoryShowcase />
+        <ProductGrid />
+        <ArtisanStory />
+        <CraftingProcess />
+        <BlogSection />
+        <Testimonials />
+      </main>
 
-        <Footer />
+      <Footer />
 
-        <ProductDetailModal />
-        <CartDrawer />
-        <CheckoutModal />
-        <OrderSuccessModal />
-        <OrderTrackingModal />
-        <AdminDashboard />
-        <AuthModal />
-      </div>
-    </StoreProvider>
+      <ProductDetailModal />
+      <CartDrawer />
+      <CheckoutModal />
+      <OrderSuccessModal />
+      <OrderTrackingModal />
+      <AdminDashboard />
+      <AuthModal />
+    </div>
   );
 }

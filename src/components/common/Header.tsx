@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { 
   ShoppingBag, 
   Search, 
@@ -10,7 +11,12 @@ import {
   Settings,
   User,
   ShieldCheck,
-  Briefcase
+  Briefcase,
+  ChevronDown,
+  LogOut,
+  Package,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { useStore } from '@/context/StoreContext';
 import { CeramicCategory } from '@/types';
@@ -22,6 +28,7 @@ export default function Header() {
     setIsOrderTrackingOpen, 
     setIsAdminOpen,
     currentUser,
+    logout,
     setIsAuthModalOpen,
     setAuthModalTab,
     searchQuery, 
@@ -32,6 +39,19 @@ export default function Header() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleCategoryClick = (cat: CeramicCategory | 'all') => {
     setActiveCategory(cat);
@@ -148,21 +168,14 @@ export default function Header() {
             </button>
           )}
 
-          {/* Nút Tài khoản / Đăng nhập */}
-          <button
-            onClick={() => {
-              setAuthModalTab('login');
-              setIsAuthModalOpen(true);
-            }}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-sans transition-colors ${
-              currentUser
-                ? 'bg-white/15 text-white hover:bg-white/20 border border-white/20'
-                : 'hover:bg-white/10 text-white/90 hover:text-[#E2C67E] border border-[#C9A24B]/35'
-            }`}
-            title={currentUser ? `Đang đăng nhập: ${currentUser.name} (${currentUser.role}) - Bấm để đổi tài khoản hoặc xem hồ sơ` : 'Đăng nhập hệ thống (Admin / Manager / User)'}
-          >
-            {currentUser ? (
-              <>
+          {/* Nút Tài khoản / Đăng nhập & Dropdown Menu */}
+          {currentUser ? (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-sans transition-colors bg-white/15 text-white hover:bg-white/20 border border-white/20 cursor-pointer"
+                title={`Đang đăng nhập: ${currentUser.name}`}
+              >
                 <div className="w-5 h-5 rounded-full bg-[#C9A24B] text-[#142228] font-bold flex items-center justify-center text-[10px]">
                   {currentUser.role === 'admin' ? '👑' : currentUser.role === 'manager' ? '💼' : currentUser.name.charAt(0)}
                 </div>
@@ -172,14 +185,91 @@ export default function Header() {
                 <span className="text-[10px] hidden xl:inline px-1.5 py-0.2 rounded-full bg-[#163845] text-[#E2C67E] border border-[#C9A24B]/40">
                   {currentUser.role === 'admin' ? 'Admin' : currentUser.role === 'manager' ? 'Manager' : 'Khách'}
                 </span>
-              </>
-            ) : (
-              <>
-                <User className="w-4 h-4 text-[#E2C67E]" />
-                <span className="hidden sm:inline font-semibold">Đăng nhập</span>
-              </>
-            )}
-          </button>
+                <ChevronDown className={`w-3.5 h-3.5 text-white/70 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Account Dropdown Menu */}
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 rounded-xl bg-white text-[#142228] shadow-2xl border border-[#C9A24B]/40 py-2 z-50 animate-scale-in">
+                  <div className="px-4 py-2.5 border-b border-gray-100 bg-[#FAF7F2]">
+                    <div className="font-bold text-xs text-[#163845] truncate">
+                      {currentUser.name}
+                    </div>
+                    <div className="text-[11px] text-[#526872] truncate">
+                      {currentUser.email}
+                    </div>
+                    <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#163845] text-[#E2C67E]">
+                      {currentUser.role === 'admin' 
+                        ? '👑 Chủ Xưởng (Toàn Quyền)' 
+                        : currentUser.role === 'manager' 
+                        ? '💼 Quản Lý Bán Hàng' 
+                        : '🛍️ Khách Hàng Thân Thiết'}
+                    </div>
+                  </div>
+
+                  <div className="py-1 text-xs">
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        setAuthModalTab('profile');
+                        setIsAuthModalOpen(true);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-[#FAF7F2] text-[#142228] flex items-center gap-2.5 transition-colors"
+                    >
+                      <User className="w-4 h-4 text-[#9B7832]" />
+                      <span>Hồ sơ & Đơn hàng của tôi</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        setIsOrderTrackingOpen(true);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-[#FAF7F2] text-[#142228] flex items-center gap-2.5 transition-colors"
+                    >
+                      <ClipboardList className="w-4 h-4 text-[#9B7832]" />
+                      <span>Tra cứu trạng thái đơn</span>
+                    </button>
+
+                    {(currentUser.role === 'admin' || currentUser.role === 'manager') && (
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          setIsAdminOpen(true);
+                        }}
+                        className="w-full text-left px-4 py-2 hover:bg-[#FAF7F2] text-[#163845] font-semibold flex items-center gap-2.5 transition-colors"
+                      >
+                        <Settings className="w-4 h-4 text-[#C9A24B]" />
+                        <span>Mở Bảng Quản Trị Xưởng</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="pt-1 border-t border-gray-100">
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        logout();
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-rose-50 text-rose-600 text-xs font-semibold flex items-center gap-2.5 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Đăng xuất tài khoản</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-sans transition-colors hover:bg-white/10 text-white/90 hover:text-[#E2C67E] border border-[#C9A24B]/35"
+              title="Đăng nhập tài khoản"
+            >
+              <User className="w-4 h-4 text-[#E2C67E]" />
+              <span className="hidden sm:inline font-semibold">Đăng nhập</span>
+            </Link>
+          )}
 
           {/* Giỏ hàng */}
           <button
@@ -223,35 +313,80 @@ export default function Header() {
               Bình Hút Lộc
             </button>
           </div>
-          <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-2 flex-wrap">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setAuthModalTab('login');
-                setIsAuthModalOpen(true);
-              }}
-              className="text-[#E2C67E] font-medium flex items-center gap-1.5"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>{currentUser ? `Tài khoản: ${currentUser.name}` : 'Đăng nhập hệ thống'}</span>
-            </button>
-
-            {(currentUser?.role === 'admin' || currentUser?.role === 'manager') && (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsAdminOpen(true);
-                }}
-                className="text-white hover:text-[#E2C67E] font-medium flex items-center gap-1"
-              >
-                <Settings className="w-3.5 h-3.5" />
-                <span>Quản trị</span>
-              </button>
+          
+          <div className="pt-2 border-t border-white/10 flex flex-col gap-2">
+            {currentUser ? (
+              <div className="space-y-1.5 bg-white/5 p-2 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="font-semibold text-[#E2C67E] truncate">{currentUser.name}</div>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#C9A24B] text-[#142228] font-bold">
+                    {currentUser.role}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 pt-1 text-[11px]">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setAuthModalTab('profile');
+                      setIsAuthModalOpen(true);
+                    }}
+                    className="text-white hover:text-[#E2C67E]"
+                  >
+                    Hồ sơ & Đơn hàng
+                  </button>
+                  {(currentUser.role === 'admin' || currentUser.role === 'manager') && (
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setIsAdminOpen(true);
+                      }}
+                      className="text-[#E2C67E] font-semibold"
+                    >
+                      Bảng Quản Trị
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      logout();
+                    }}
+                    className="text-rose-300 ml-auto"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 py-2 text-center rounded-lg bg-[#C9A24B] text-[#142228] font-semibold text-xs"
+                >
+                  Đăng Nhập
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 py-2 text-center rounded-lg bg-white/10 text-white font-semibold text-xs hover:bg-white/15"
+                >
+                  Đăng Ký
+                </Link>
+              </div>
             )}
 
-            <button onClick={() => { setMobileMenuOpen(false); setIsOrderTrackingOpen(true); }} className="text-white/80 font-medium">
-              Tra cứu đơn
-            </button>
+            <div className="flex items-center justify-between text-[11px] text-white/70 pt-1">
+              <button onClick={() => { setMobileMenuOpen(false); setIsOrderTrackingOpen(true); }}>
+                Tra cứu đơn hàng
+              </button>
+              <Link 
+                href="/admin/login" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-[#E2C67E] hover:underline"
+              >
+                Cổng Quản Trị Nội Bộ
+              </Link>
+            </div>
           </div>
         </div>
       )}

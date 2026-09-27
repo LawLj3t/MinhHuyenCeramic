@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Phone, MapPin, Settings, ClipboardList, User } from 'lucide-react';
 import { useStore } from '@/context/StoreContext';
 
@@ -13,15 +14,6 @@ export default function Footer() {
     setIsAuthModalOpen, 
     setAuthModalTab 
   } = useStore();
-
-  const handleAdminClick = () => {
-    if (currentUser?.role === 'admin' || currentUser?.role === 'manager') {
-      setIsAdminOpen(true);
-    } else {
-      setAuthModalTab('login');
-      setIsAuthModalOpen(true);
-    }
-  };
 
   return (
     <footer className="bg-[#163845] text-white/90 border-t border-[#C9A24B]/40 font-sans">
@@ -64,25 +56,46 @@ export default function Footer() {
               <span>Tra cứu đơn</span>
             </button>
 
-            <button
-              onClick={() => {
-                setAuthModalTab('login');
-                setIsAuthModalOpen(true);
-              }}
-              className="inline-flex items-center gap-1.5 hover:text-[#E2C67E] transition-colors"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>{currentUser ? `Tài khoản: ${currentUser.name}` : 'Đăng nhập tài khoản'}</span>
-            </button>
+            {currentUser ? (
+              <button
+                onClick={() => {
+                  setAuthModalTab('profile');
+                  setIsAuthModalOpen(true);
+                }}
+                className="inline-flex items-center gap-1.5 hover:text-[#E2C67E] transition-colors"
+              >
+                <User className="w-3.5 h-3.5 text-[#E2C67E]" />
+                <span>Tài khoản ({currentUser.name})</span>
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 hover:text-[#E2C67E] transition-colors"
+              >
+                <User className="w-3.5 h-3.5 text-[#E2C67E]" />
+                <span>Đăng nhập</span>
+              </Link>
+            )}
 
-            <button
-              onClick={handleAdminClick}
-              className="inline-flex items-center gap-1.5 text-white/70 hover:text-[#E2C67E] transition-colors"
-              title="Khu vực Quản trị & Bán hàng"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>Quản trị xưởng</span>
-            </button>
+            {currentUser?.role === 'admin' || currentUser?.role === 'manager' ? (
+              <button
+                onClick={() => setIsAdminOpen(true)}
+                className="inline-flex items-center gap-1.5 text-[#E2C67E] hover:underline transition-colors font-semibold"
+                title="Bảng Quản Trị Xưởng"
+              >
+                <Settings className="w-3.5 h-3.5" />
+                <span>Bảng Quản Trị</span>
+              </button>
+            ) : (
+              <Link
+                href="/admin/login"
+                className="inline-flex items-center gap-1.5 text-white/50 hover:text-[#E2C67E] transition-colors"
+                title="Cổng Quản Trị Nội Bộ"
+              >
+                <Settings className="w-3.5 h-3.5" />
+                <span>Cổng Quản Trị</span>
+              </Link>
+            )}
           </div>
 
           <div className="text-xs text-white/65 font-sans text-center md:text-right">
