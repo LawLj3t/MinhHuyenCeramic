@@ -22,7 +22,7 @@ export default function CraftingProcess() {
     {
       step: '04',
       title: 'Phủ Men Ngọc Lam',
-      desc: 'Tráng lớp men dạn xanh ngọc lam điểm ánh vàng trầm cổ.'
+      desc: 'Tráng lớp men rạn xanh ngọc lam điểm ánh vàng trầm cổ.'
     },
     {
       step: '05',

@@ -28,14 +28,23 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           
-          <div className="text-center md:text-left">
-            <div className="font-serif text-lg font-bold text-white tracking-tight">
-              {storeSettings.storeName}
+          <div className="flex items-center gap-3.5 text-center md:text-left">
+            <div className="w-12 h-12 rounded-lg bg-white border-2 border-[#C9A24B] p-0.5 shrink-0 flex items-center justify-center overflow-hidden shadow-xs">
+              <img
+                src="/images/logo.png"
+                alt="Minh Huyền Ceramic Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <p className="text-xs text-white/75 font-sans mt-1 flex items-center justify-center md:justify-start gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#E2C67E] shrink-0" />
-              <span>{storeSettings.address}</span>
-            </p>
+            <div>
+              <div className="font-serif text-lg font-bold text-white tracking-tight">
+                {storeSettings.storeName}
+              </div>
+              <p className="text-xs text-white/75 font-sans mt-1 flex items-center justify-center md:justify-start gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[#E2C67E] shrink-0" />
+                <span>{storeSettings.address}</span>
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-sans font-medium">
@@ -57,13 +66,13 @@ export default function Footer() {
 
             <button
               onClick={() => {
-                setAuthModalTab(currentUser ? 'profile' : 'login');
+                setAuthModalTab('login');
                 setIsAuthModalOpen(true);
               }}
               className="inline-flex items-center gap-1.5 hover:text-[#E2C67E] transition-colors"
             >
               <User className="w-3.5 h-3.5" />
-              <span>{currentUser ? currentUser.name : 'Đăng nhập / Phân quyền'}</span>
+              <span>{currentUser ? `Tài khoản: ${currentUser.name}` : 'Đăng nhập tài khoản'}</span>
             </button>
 
             <button

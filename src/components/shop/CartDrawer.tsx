@@ -125,6 +125,7 @@ export default function CartDrawer() {
                   <CeramicArtwork
                     type={product.illustrationType}
                     glaze={product.glaze}
+                    imageUrl={product.imageUrl}
                     className="h-full min-h-0"
                     showSeal={false}
                   />

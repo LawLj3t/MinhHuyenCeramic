@@ -35,7 +35,7 @@ export default function ArtisanStory() {
             </h2>
 
             <p className="text-sm sm:text-base text-white/85 font-sans leading-relaxed">
-              Mỗi tác phẩm tại Minh Huyền Ceramic được nghệ nhân vuốt tay thủ công và nung củi 1300°C suốt 3 ngày đêm. Nước men dạn xanh ngọc lam hòa quyện sắc vàng trầm tạo nên vẻ đẹp độc bản vượt thời gian.
+              Mỗi tác phẩm tại Minh Huyền Ceramic được nghệ nhân vuốt tay thủ công và nung củi 1300°C suốt 3 ngày đêm. Nước men rạn xanh ngọc lam hòa quyện sắc vàng trầm tạo nên vẻ đẹp độc bản vượt thời gian.
             </p>
 
             <div className="pt-2">

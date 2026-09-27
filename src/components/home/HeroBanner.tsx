@@ -83,12 +83,12 @@ export default function HeroBanner() {
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2C5F6F]/12 border border-[#2C5F6F]/25 text-[#163845] text-xs font-sans font-semibold tracking-wider uppercase mb-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#C9A24B]" />
-                  <span>Gốm Sứ Bát Tràng · Men Dạn Ngọc Lam</span>
+                  <span>Gốm Sứ Bát Tràng · Men Rạn Ngọc Lam</span>
                 </div>
 
                 {/* Slogan 1 câu ngắn gọn, mạnh mẽ (8-10 từ) */}
                 <h1 className="font-serif text-2xl sm:text-3xl md:text-[34px] font-bold text-[#142228] leading-[1.25]">
-                  Tinh Hoa Men Dạn · Tuyệt Tác Nung Củi 1300°C
+                  Tinh Hoa Men Rạn · Tuyệt Tác Nung Củi 1300°C
                 </h1>
 
                 {/* Tên & giá sản phẩm đang trình chiếu */}

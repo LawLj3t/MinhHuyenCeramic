@@ -84,6 +84,7 @@ export default function AdminDashboard() {
 
   // New Product Modal State
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [newDetailUrl, setNewDetailUrl] = useState('');
   const [productForm, setProductForm] = useState<Partial<Product>>({
     name: '',
     category: 'dotho' as CeramicCategory,
@@ -106,7 +107,8 @@ export default function AdminDashboard() {
     description: 'Chế tác thủ công từ đất cao lanh Bát Tràng tuyển chọn, nung củi 1300°C khử chì.',
     features: ['Gốm Bát Tràng thủ công', 'Nung 1300°C khử sạch chì'],
     illustrationType: 'bat-huong' as IllustrationType,
-    imageUrl: ''
+    imageUrl: '',
+    images: []
   });
 
   // New Staff Modal State
@@ -134,35 +136,89 @@ export default function AdminDashboard() {
     setTimeout(() => setSettingsSaved(false), 2500);
   };
 
-  // Handle image upload from computer via Canvas resize & base64
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Compress image file helper -> Base64 JPEG
+  const compressImageFile = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 900;
+          let { width, height } = img;
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Handle main cover image upload from computer
+  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const compressedBase64 = await compressImageFile(file);
+    setProductForm((prev) => ({ ...prev, imageUrl: compressedBase64 }));
+  };
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const maxDim = 850;
-        let { width, height } = img;
-        if (width > height && width > maxDim) {
-          height = Math.round((height * maxDim) / width);
-          width = maxDim;
-        } else if (height > maxDim) {
-          width = Math.round((width * maxDim) / height);
-          height = maxDim;
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0, width, height);
-        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
-        setProductForm((prev) => ({ ...prev, imageUrl: compressedBase64 }));
-      };
-      img.src = event.target?.result as string;
-    };
-    reader.readAsDataURL(file);
+  // Handle multiple detail images upload from computer
+  const handleDetailImagesFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const uploadedList: string[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const b64 = await compressImageFile(files[i]);
+      uploadedList.push(b64);
+    }
+    setProductForm((prev) => ({
+      ...prev,
+      images: [...(prev.images || []), ...uploadedList]
+    }));
+    e.target.value = '';
+  };
+
+  const handleAddDetailUrl = () => {
+    if (!newDetailUrl.trim()) return;
+    setProductForm((prev) => ({
+      ...prev,
+      images: [...(prev.images || []), newDetailUrl.trim()]
+    }));
+    setNewDetailUrl('');
+  };
+
+  const handleRemoveDetailImage = (index: number) => {
+    setProductForm((prev) => ({
+      ...prev,
+      images: (prev.images || []).filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleSetDetailAsCover = (index: number) => {
+    const detailList = [...(productForm.images || [])];
+    const chosen = detailList[index];
+    if (!chosen) return;
+    const oldCover = productForm.imageUrl;
+    detailList.splice(index, 1);
+    if (oldCover) {
+      detailList.unshift(oldCover);
+    }
+    setProductForm((prev) => ({
+      ...prev,
+      imageUrl: chosen,
+      images: detailList
+    }));
   };
 
   // Handle create or update product
@@ -182,12 +238,14 @@ export default function AdminDashboard() {
 
   const handleOpenEdit = (p: Product) => {
     setEditingProduct(p);
-    setProductForm({ ...p });
+    setProductForm({ ...p, images: p.images || [] });
+    setNewDetailUrl('');
     setIsEditProductOpen(true);
   };
 
   const handleOpenAdd = () => {
     setEditingProduct(null);
+    setNewDetailUrl('');
     setProductForm({
       name: '',
       category: 'dotho',
@@ -210,7 +268,8 @@ export default function AdminDashboard() {
       description: 'Chế tác thủ công từ đất cao lanh Bát Tràng tuyển chọn, nung củi 1300°C khử chì.',
       features: ['Gốm Bát Tràng thủ công', 'Nung 1300°C khử sạch chì'],
       illustrationType: 'bat-huong',
-      imageUrl: ''
+      imageUrl: '',
+      images: []
     });
     setIsAddProductOpen(true);
   };
@@ -262,7 +321,9 @@ export default function AdminDashboard() {
       <header className="bg-[#163845] text-white border-b-2 border-[#C9A24B] px-4 sm:px-6 py-3 shrink-0 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <SealStamp text="Quản Trị" subtext={isAdmin ? 'Chủ Xưởng' : 'Bán Hàng'} className="bg-white/10" />
+            <div className="w-10 h-10 rounded-lg bg-white border-2 border-[#C9A24B] p-0.5 flex items-center justify-center overflow-hidden shrink-0">
+              <img src="/images/logo.png" alt="Logo" className="w-full h-full object-contain" />
+            </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="font-serif font-bold text-base sm:text-xl text-white leading-none">
@@ -599,11 +660,11 @@ export default function AdminDashboard() {
                       <td className="p-3 w-16">
                         <div 
                           onClick={() => handleOpenEdit(prod)}
-                          className="w-14 h-14 rounded-lg overflow-hidden border border-[#C9A24B]/35 cursor-pointer relative group bg-gray-50 flex items-center justify-center"
+                          className="w-14 h-14 rounded-lg overflow-hidden border border-[#C9A24B]/35 cursor-pointer relative group bg-[#F8F6F0] flex items-center justify-center"
                           title="Bấm để đổi ảnh hoặc chỉnh sửa tác phẩm"
                         >
                           {prod.imageUrl ? (
-                            <img src={prod.imageUrl} alt={prod.name} className="w-full h-full object-cover" />
+                            <img src={prod.imageUrl} alt={prod.name} className="w-full h-full object-contain p-0.5" />
                           ) : (
                             <CeramicArtwork
                               type={prod.illustrationType}
@@ -645,9 +706,14 @@ export default function AdminDashboard() {
                       </td>
                       <td className="p-3 text-[11px]">
                         {prod.imageUrl ? (
-                          <span className="inline-flex items-center gap-1 text-emerald-700 font-medium">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Ảnh thật
-                          </span>
+                          <div className="space-y-0.5">
+                            <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
+                              <CheckCircle2 className="w-3.5 h-3.5" /> 1 ảnh đại diện
+                            </span>
+                            <div className="text-[10px] text-[#526872]">
+                              + {(prod.images || []).length} ảnh chi tiết
+                            </div>
+                          </div>
                         ) : (
                           <span className="text-[#9B7832] font-medium">Vẽ SVG (Minh họa)</span>
                         )}
@@ -1075,12 +1141,12 @@ export default function AdminDashboard() {
 
             <form onSubmit={handleSaveProduct} className="mt-4 space-y-4 text-xs">
               
-              {/* IMAGE UPLOAD & PREVIEW SECTION */}
+              {/* 1. ẢNH ĐẠI DIỆN BÊN NGOÀI (1 ẢNH CHÍNH - HIỂN THỊ ĐẦY ĐỦ KHÔNG CẮT KHUYẾT) */}
               <div className="p-3.5 bg-white rounded-xl border border-[#C9A24B]/40 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-[#163845] uppercase tracking-wider flex items-center gap-1.5 text-xs">
                     <Camera className="w-4 h-4 text-[#9B7832]" />
-                    Hình Ảnh Sản Phẩm (Thực Tế)
+                    1. Ảnh Đại Diện Bên Ngoài (Hiển thị trọn vẹn trên thẻ sản phẩm)
                   </span>
                   {productForm.imageUrl && (
                     <button
@@ -1088,19 +1154,19 @@ export default function AdminDashboard() {
                       onClick={() => setProductForm({ ...productForm, imageUrl: '' })}
                       className="text-rose-600 hover:underline text-[11px] font-semibold"
                     >
-                      Xóa ảnh thực (Quay về minh họa SVG)
+                      Xóa ảnh đại diện (Về minh họa SVG)
                     </button>
                   )}
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center">
-                  {/* Preview Box */}
-                  <div className="w-32 h-32 rounded-lg border-2 border-dashed border-[#2C5F6F]/30 overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 relative">
+                  {/* Preview Box (object-contain so full image is visible without cropping) */}
+                  <div className="w-36 h-36 rounded-lg border-2 border-dashed border-[#2C5F6F]/30 overflow-hidden bg-[#F8F6F0] flex items-center justify-center shrink-0 relative">
                     {productForm.imageUrl ? (
                       <img
                         src={productForm.imageUrl}
-                        alt="Xem trước ảnh sản phẩm"
-                        className="w-full h-full object-cover"
+                        alt="Xem trước ảnh đại diện"
+                        className="w-full h-full object-contain p-1.5"
                       />
                     ) : (
                       <div className="w-full h-full">
@@ -1115,14 +1181,14 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Upload Controls */}
-                  <div className="space-y-2 flex-1 w-full">
+                  <div className="space-y-2.5 flex-1 w-full">
                     <div>
                       <label className="block text-[11px] font-semibold text-[#142228] mb-1">
-                        1. Tải ảnh thật từ máy tính / điện thoại
+                        Tải 1 ảnh đại diện từ máy tính / điện thoại (Hiển thị đủ 100% khung ảnh)
                       </label>
                       <label className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#2C5F6F] hover:bg-[#163845] text-white text-xs font-semibold cursor-pointer transition-colors shadow-xs">
                         <Upload className="w-3.5 h-3.5 text-[#E2C67E]" />
-                        <span>Chọn File Ảnh Từ Máy</span>
+                        <span>Chọn Ảnh Đại Diện</span>
                         <input
                           type="file"
                           accept="image/*"
@@ -1134,7 +1200,7 @@ export default function AdminDashboard() {
 
                     <div>
                       <label className="block text-[11px] font-semibold text-[#142228] mb-1">
-                        2. Hoặc dán đường dẫn ảnh / Link URL
+                        Hoặc dán đường dẫn / Link URL ảnh đại diện
                       </label>
                       <input
                         type="text"
@@ -1146,6 +1212,93 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* 2. BỘ SƯU TẬP NHIỀU ẢNH CHI TIẾT (HIỂN THỊ KHI ẤN XEM CHI TIẾT) */}
+              <div className="p-3.5 bg-white rounded-xl border border-[#C9A24B]/40 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <span className="font-bold text-[#163845] uppercase tracking-wider flex items-center gap-1.5 text-xs">
+                      <ImageIcon className="w-4 h-4 text-[#9B7832]" />
+                      2. Bộ Sưu Tập Ảnh Chi Tiết ({(productForm.images || []).length} ảnh phụ khi bấm Xem Chi Tiết)
+                    </span>
+                    <p className="text-[11px] text-[#526872] mt-0.5">
+                      Thêm nhiều góc chụp (góc nghiêng, cận cảnh vân men rạn, miệng bình, đáy triện lò...) để khách xem khi bấm vào sản phẩm.
+                    </p>
+                  </div>
+
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#163845] hover:bg-[#2C5F6F] text-[#E2C67E] text-xs font-semibold cursor-pointer transition-colors shadow-xs">
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Tải Thêm Nhiều Ảnh Chi Tiết</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleDetailImagesFileChange}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {/* Add Detail URL Input */}
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Hoặc dán thêm link ảnh chi tiết (URL / đường dẫn)..."
+                    value={newDetailUrl}
+                    onChange={(e) => setNewDetailUrl(e.target.value)}
+                    className="flex-1 px-3 py-1.5 border border-[#2C5F6F]/25 rounded-lg bg-[#FAF7F2] text-xs focus:outline-hidden focus:border-[#2C5F6F]"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddDetailUrl}
+                    className="px-3 py-1.5 rounded-lg border border-[#2C5F6F] text-[#163845] hover:bg-[#FAF7F2] font-semibold text-xs whitespace-nowrap"
+                  >
+                    + Thêm Link
+                  </button>
+                </div>
+
+                {/* Grid of Detail Images */}
+                {(productForm.images || []).length > 0 ? (
+                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2.5 pt-1">
+                    {(productForm.images || []).map((imgUrl, index) => (
+                      <div
+                        key={index}
+                        className="relative group rounded-lg border border-[#C9A24B]/40 bg-[#F8F6F0] aspect-square overflow-hidden flex flex-col items-center justify-center p-1"
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`Ảnh chi tiết ${index + 1}`}
+                          className="w-full h-full object-contain"
+                        />
+                        <span className="absolute top-1 left-1 px-1.5 py-0.2 rounded bg-[#163845]/85 text-white text-[9px] font-bold">
+                          #{index + 1}
+                        </span>
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 p-1">
+                          <button
+                            type="button"
+                            onClick={() => handleSetDetailAsCover(index)}
+                            className="w-full py-1 rounded bg-[#C9A24B] text-[#142228] text-[9px] font-bold"
+                            title="Đặt ảnh này làm ảnh đại diện bên ngoài"
+                          >
+                            Đặt đại diện
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveDetailImage(index)}
+                            className="w-full py-1 rounded bg-rose-600 text-white text-[9px] font-bold"
+                          >
+                            Xóa ảnh
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-3 text-center text-[11px] text-[#526872] bg-[#FAF7F2] rounded-lg border border-dashed border-[#C9A24B]/40">
+                    Chưa có ảnh chi tiết phụ. Hãy bấm <strong>"Tải Thêm Nhiều Ảnh Chi Tiết"</strong> để chọn nhiều ảnh từ máy!
+                  </div>
+                )}
               </div>
 
               {/* Text Information */}

@@ -53,6 +53,7 @@ export interface Product {
   features: string[];
   illustrationType: IllustrationType;
   imageUrl?: string;
+  images?: string[];
   isFeatured?: boolean;
 }
 

@@ -9,10 +9,10 @@
   --font-serif-family: var(--font-playfair), Georgia, Cambria, serif;
   --font-sans-family: var(--font-be-vietnam), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Bảng màu Men Dạn Xanh Nước Biển (#2C5F6F) & Vàng Trầm (#C9A24B) */
+  /* Bảng màu Men Rạn Xanh Nước Biển (#2C5F6F) & Vàng Trầm (#C9A24B) */
   --celadon-deep: #163845;       /* Xanh nước biển trầm đậm */
   --celadon-dark: #1E4959;       /* Xanh ngọc lam đậm */
-  --celadon-main: #2C5F6F;       /* Xanh nước biển men dạn chủ đạo */
+  --celadon-main: #2C5F6F;       /* Xanh nước biển men rạn chủ đạo */
   --celadon-light: #4A8194;      /* Xanh lam ngọc sáng */
   --celadon-mist: #DFECEF;       /* Nền men lam ngọc dịu */
 
@@ -66,7 +66,7 @@ button, input, select, textarea, nav, .font-ui {
   letter-spacing: -0.01em;
 }
 
-/* Nền Men Dạn Xanh Nước Biển Vàng Trầm (Dark Hero / Heritage) */
+/* Nền Men Rạn Xanh Nước Biển Vàng Trầm (Dark Hero / Heritage) */
 .bg-men-dan-deep {
   background-color: #1B4352;
   background-image:
@@ -76,7 +76,7 @@ button, input, select, textarea, nav, .font-ui {
   position: relative;
 }
 
-/* Nền Men Dạn Xanh Lam Pha Vàng Trầm (Light Section Background) */
+/* Nền Men Rạn Xanh Lam Pha Vàng Trầm (Light Section Background) */
 .bg-men-dan-surface {
   background-color: #E2EEF0;
   background-image:

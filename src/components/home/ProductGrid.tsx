@@ -139,8 +139,8 @@ export default function ProductGrid() {
                 onClick={() => setQuickViewProduct(product)}
                 className="group cursor-pointer bg-white/95 rounded-xl border border-[#C9A24B]/35 hover:border-[#2C5F6F] transition-all duration-300 hover-lift flex flex-col justify-between overflow-hidden"
               >
-                {/* Ảnh sản phẩm lớn (tỷ lệ 4:3 rộng rãi) */}
-                <div className="relative w-full aspect-4/3 overflow-hidden flex items-center justify-center border-b border-[#2C5F6F]/10">
+                {/* Ảnh đại diện sản phẩm hiển thị trọn vẹn (tỷ lệ vuông 1:1 cân đối, không cắt khuyết) */}
+                <div className="relative w-full aspect-square overflow-hidden flex items-center justify-center border-b border-[#2C5F6F]/10 bg-[#F7F5EE]">
                   <CeramicArtwork
                     type={product.illustrationType}
                     glaze={product.glaze}
@@ -148,6 +148,13 @@ export default function ProductGrid() {
                     imageUrl={product.imageUrl}
                     className="w-full h-full"
                   />
+
+                  {/* Chỉ báo có nhiều ảnh chi tiết bên trong */}
+                  <div className="absolute bottom-2.5 right-2.5 z-10 px-2 py-0.5 rounded-md bg-[#163845]/80 text-white text-[10px] font-sans font-medium backdrop-blur-xs pointer-events-none">
+                    {product.images && product.images.length > 0
+                      ? `+${product.images.length} ảnh chi tiết`
+                      : 'Xem nhiều góc chụp'}
+                  </div>
 
                   {/* Nút Đổi ảnh / Sửa nhanh dành cho Admin & Manager */}
                   {(currentUser?.role === 'admin' || currentUser?.role === 'manager') && (

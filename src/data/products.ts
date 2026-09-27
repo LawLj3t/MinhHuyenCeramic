@@ -344,7 +344,7 @@ export const REVIEWS = [
     productName: 'Bát Hương Men Rạn Dát Vàng Song Long',
     rating: 5,
     date: '18/09/2026',
-    comment: 'Gốm men dạn rất đanh, tiếng gõ vang thanh, nét rồng đắp nổi uy nghiêm và dát vàng 24K rất sáng.',
+    comment: 'Gốm men rạn rất đanh, tiếng gõ vang thanh, nét rồng đắp nổi uy nghiêm và dát vàng 24K rất sáng.',
     verified: true
   },
   {
@@ -364,7 +364,7 @@ export const REVIEWS = [
     productName: 'Bộ Ấm Chén Men Rạn Bọc Đồng Trúc Lâm',
     rating: 5,
     date: '10/09/2026',
-    comment: 'Ấm trà rót tròn dòng không rớt nước, sắc men dạn ngọc lam viền đồng cổ điển vô cùng tinh xảo.',
+    comment: 'Ấm trà rót tròn dòng không rớt nước, sắc men rạn ngọc lam viền đồng cổ điển vô cùng tinh xảo.',
     verified: true
   }
 ];

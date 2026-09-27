@@ -50,20 +50,24 @@ export default function Header() {
     <header className="sticky top-0 z-40 bg-[#163845]/95 backdrop-blur-md text-white border-b border-[#C9A24B]/35 shadow-sm font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         
-        {/* Logo thương hiệu */}
+        {/* Logo thương hiệu chính thức */}
         <div 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center gap-3 cursor-pointer shrink-0"
+          className="flex items-center gap-3 cursor-pointer shrink-0 group"
         >
-          <div className="w-9 h-9 rounded-lg bg-[#C9A24B]/20 border border-[#C9A24B] flex items-center justify-center text-[#E2C67E] font-serif font-bold text-lg leading-none">
-            M
+          <div className="w-11 h-11 rounded-lg bg-white border-2 border-[#C9A24B] flex items-center justify-center overflow-hidden shadow-xs group-hover:scale-105 transition-transform p-0.5">
+            <img
+              src="/images/logo.png"
+              alt="Minh Huyền Ceramic Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div className="flex flex-col justify-center">
             <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white leading-tight">
               Minh Huyền Ceramic
             </span>
             <span className="text-[10px] text-[#E2C67E] font-sans font-medium tracking-widest uppercase leading-none mt-0.5">
-              Bát Tràng • 1300°C
+              Bát Tràng • Men Rạn 1300°C
             </span>
           </div>
         </div>
@@ -144,18 +148,18 @@ export default function Header() {
             </button>
           )}
 
-          {/* Nút Tài khoản / Đăng nhập / Phân quyền */}
+          {/* Nút Tài khoản / Đăng nhập */}
           <button
             onClick={() => {
-              setAuthModalTab(currentUser ? 'profile' : 'login');
+              setAuthModalTab('login');
               setIsAuthModalOpen(true);
             }}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-sans transition-colors ${
               currentUser
                 ? 'bg-white/15 text-white hover:bg-white/20 border border-white/20'
-                : 'hover:bg-white/10 text-white/90 hover:text-[#E2C67E]'
+                : 'hover:bg-white/10 text-white/90 hover:text-[#E2C67E] border border-[#C9A24B]/35'
             }`}
-            title={currentUser ? `Tài khoản: ${currentUser.name} (${currentUser.role})` : 'Đăng nhập / Phân quyền'}
+            title={currentUser ? `Đang đăng nhập: ${currentUser.name} (${currentUser.role}) - Bấm để đổi tài khoản hoặc xem hồ sơ` : 'Đăng nhập hệ thống (Admin / Manager / User)'}
           >
             {currentUser ? (
               <>
@@ -166,13 +170,13 @@ export default function Header() {
                   {currentUser.name.split(' ').slice(-1)[0]}
                 </span>
                 <span className="text-[10px] hidden xl:inline px-1.5 py-0.2 rounded-full bg-[#163845] text-[#E2C67E] border border-[#C9A24B]/40">
-                  {currentUser.role === 'admin' ? 'Admin' : currentUser.role === 'manager' ? 'Kho/Sales' : 'Khách'}
+                  {currentUser.role === 'admin' ? 'Admin' : currentUser.role === 'manager' ? 'Manager' : 'Khách'}
                 </span>
               </>
             ) : (
               <>
                 <User className="w-4 h-4 text-[#E2C67E]" />
-                <span className="hidden sm:inline">Đăng nhập</span>
+                <span className="hidden sm:inline font-semibold">Đăng nhập</span>
               </>
             )}
           </button>
@@ -223,13 +227,13 @@ export default function Header() {
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
-                setAuthModalTab(currentUser ? 'profile' : 'login');
+                setAuthModalTab('login');
                 setIsAuthModalOpen(true);
               }}
               className="text-[#E2C67E] font-medium flex items-center gap-1.5"
             >
               <User className="w-3.5 h-3.5" />
-              <span>{currentUser ? `${currentUser.name} (${currentUser.role})` : 'Đăng nhập / Phân quyền'}</span>
+              <span>{currentUser ? `Tài khoản: ${currentUser.name}` : 'Đăng nhập hệ thống'}</span>
             </button>
 
             {(currentUser?.role === 'admin' || currentUser?.role === 'manager') && (

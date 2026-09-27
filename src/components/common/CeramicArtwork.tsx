@@ -67,12 +67,25 @@ export function CeramicArtwork({
 }: CeramicArtworkProps) {
   if (imageUrl) {
     return (
-      <div className={`relative overflow-hidden w-full h-full flex items-center justify-center ${className}`}>
+      <div className={`relative overflow-hidden w-full h-full flex items-center justify-center bg-gradient-to-b from-[#F7F5EE] via-[#EFECE2] to-[#E5DEC9] ${className}`}>
+        {/* Lớp nền mờ đồng điệu từ chính bức ảnh để lấp đầy khung mà không làm khuyết ảnh chính */}
+        <img
+          src={imageUrl}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover blur-xl opacity-35 scale-110 pointer-events-none select-none"
+        />
+        {/* Ảnh chính hiển thị trọn vẹn 100% (object-contain) không bị cắt mất đầu/đáy */}
         <img
           src={imageUrl}
           alt="Gốm Sứ Bát Tràng"
-          className="w-full h-full object-cover"
+          className="relative z-1 w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_8px_20px_rgba(20,34,40,0.16)]"
         />
+        {badgeText && (
+          <div className="absolute top-2.5 left-2.5 z-10 px-2.5 py-0.5 text-[10px] font-sans font-semibold tracking-wide bg-[#163845]/90 text-[#E2C67E] border border-[#C9A24B]/40 rounded-full shadow-xs">
+            {badgeText}
+          </div>
+        )}
         {showSeal && (
           <div className="absolute top-3 right-3 z-10">
             <SealStamp text="Bát Tràng" subtext="Chính Gốc" />
