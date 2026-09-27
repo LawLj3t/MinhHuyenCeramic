@@ -10,7 +10,8 @@ import {
   Truck, 
   Tag, 
   Check, 
-  ShieldCheck 
+  ShieldCheck,
+  Lock
 } from 'lucide-react';
 import { CeramicArtwork } from '@/components/common/CeramicArtwork';
 
@@ -27,7 +28,8 @@ export default function CartDrawer() {
     applyPromoCode,
     shippingFee,
     cartFinalTotal,
-    setIsCheckoutOpen
+    setIsCheckoutOpen,
+    currentUser
   } = useStore();
 
   const [inputCode, setInputCode] = useState('');
@@ -237,26 +239,34 @@ export default function CartDrawer() {
                 </span>
               </div>
 
-              <div className="flex justify-between text-sm sm:text-base font-bold text-[#181412] pt-2 border-t border-[#C5A059]/30">
+              <div className="flex justify-between text-sm sm:text-base font-bold text-[#142228] pt-2 border-t border-[#C9A24B]/30 font-sans">
                 <span>Tổng thanh toán:</span>
-                <span className="text-[#8B1E1F] text-lg font-serif">
+                <span className="text-[#163845] text-lg font-bold">
                   {cartFinalTotal.toLocaleString('vi-VN')}₫
                 </span>
               </div>
             </div>
 
+            {/* Auth Notice if not logged in */}
+            {!currentUser && (
+              <div className="p-2.5 rounded-xl bg-[#163845]/10 border border-[#C9A24B]/40 text-[#163845] text-[11px] font-sans flex items-center gap-2">
+                <Lock className="w-4 h-4 text-[#C9A24B] shrink-0" />
+                <span>Yêu cầu đăng nhập tài khoản để tiến hành đặt hàng.</span>
+              </div>
+            )}
+
             {/* Checkout Button */}
             <button
               onClick={handleProceedToCheckout}
-              className="w-full py-3 bg-gradient-to-br from-[#8B1E1F] to-[#5C1213] hover:from-[#A82224] hover:to-[#8B1E1F] text-white font-serif font-bold text-xs sm:text-sm tracking-wider uppercase rounded-xs transition-smooth shadow-medium hover:shadow-glow-red flex items-center justify-center gap-2 group hover:scale-105"
+              className="w-full py-3 bg-[#163845] hover:bg-[#2C5F6F] text-white font-sans font-bold text-xs sm:text-sm tracking-wide uppercase rounded-xl transition-all shadow-md flex items-center justify-center gap-2 group cursor-pointer"
             >
-              <span>Tiến Hành Đặt Hàng Ngay</span>
-              <ArrowRight className="w-4 h-4 text-[#DAA520] group-hover:translate-x-1 transition-transform" />
+              <span>{currentUser ? 'Tiến Hành Đặt Hàng Ngay' : 'Đăng Nhập Để Đặt Hàng'}</span>
+              <ArrowRight className="w-4 h-4 text-[#E2C67E] group-hover:translate-x-1 transition-transform" />
             </button>
 
-            <div className="flex items-center justify-center gap-2 text-[10px] text-[#8C6D27] font-serif pt-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#1E4638]" />
-              <span>Kiểm tra hàng cẩn thận trước khi thanh toán</span>
+            <div className="flex items-center justify-center gap-2 text-[10px] text-[#526872] font-sans pt-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#163845]" />
+              <span>Bảo hiểm vỡ hỏng 100% khi vận chuyển toàn quốc</span>
             </div>
 
           </div>

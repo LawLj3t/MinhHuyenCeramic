@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useStore } from '@/context/StoreContext';
 import { 
   X, 
@@ -13,7 +14,11 @@ import {
   ArrowLeft,
   PhoneCall,
   Lock,
-  UserCheck
+  UserCheck,
+  LogIn,
+  UserPlus,
+  Sparkles,
+  ShoppingBag
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PaymentMethod } from '@/types';
@@ -137,7 +142,63 @@ export default function CheckoutModal() {
           </button>
         </div>
 
-        <form onSubmit={handleSubmitOrder} className="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* If user is not logged in: Show Authentication Gate */}
+        {!currentUser ? (
+          <div className="p-6 sm:p-10 flex flex-col items-center justify-center text-center max-w-xl mx-auto space-y-6">
+            <div className="w-16 h-16 rounded-2xl bg-[#163845] border-2 border-[#C9A24B] flex items-center justify-center text-[#E2C67E] shadow-lg">
+              <Lock className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#163845]/10 text-[#163845] text-xs font-semibold">
+                <Sparkles className="w-3.5 h-3.5 text-[#C9A24B]" />
+                <span>Yêu Cầu Xác Thực Tài Khoản</span>
+              </div>
+              <h4 className="font-serif font-bold text-xl sm:text-2xl text-[#163845]">
+                Quý Khách Cần Đăng Nhập Để Đặt Hàng
+              </h4>
+              <p className="text-xs sm:text-sm text-[#526872] leading-relaxed">
+                Để kích hoạt chính sách <strong>bảo hiểm vận chuyển gốm sứ 100%</strong>, bảo hành chính hãng từ xưởng và theo dõi tiến độ giao hàng, quý khách vui lòng đăng nhập hoặc đăng ký tài khoản trước khi hoàn tất đặt hàng.
+              </p>
+            </div>
+
+            {/* Cart summary reminder */}
+            <div className="w-full p-4 rounded-xl bg-white border border-[#C9A24B]/35 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2 text-[#163845] font-semibold">
+                <ShoppingBag className="w-4 h-4 text-[#C9A24B]" />
+                <span>Giỏ hàng: {cart.reduce((s, i) => s + i.quantity, 0)} tác phẩm</span>
+              </div>
+              <div className="font-bold text-[#163845] text-sm tabular-nums">
+                {cartFinalTotal.toLocaleString('vi-VN')}₫
+              </div>
+            </div>
+
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <Link
+                href="/login"
+                onClick={() => setIsCheckoutOpen(false)}
+                className="py-3 px-4 rounded-xl bg-[#163845] hover:bg-[#2C5F6F] text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
+              >
+                <LogIn className="w-4 h-4 text-[#E2C67E]" />
+                <span>Đăng Nhập Ngay</span>
+              </Link>
+
+              <Link
+                href="/register"
+                onClick={() => setIsCheckoutOpen(false)}
+                className="py-3 px-4 rounded-xl bg-[#C9A24B] hover:bg-[#b8913d] text-[#142228] font-semibold text-xs flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>Đăng Ký Tài Khoản</span>
+              </Link>
+            </div>
+
+            <p className="text-[11px] text-[#526872] italic">
+              * Giỏ hàng của quý khách vẫn được lưu giữ nguyên vẹn sau khi đăng nhập.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmitOrder} className="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* Left: Customer & Delivery Info (7 Cols) */}
           <div className="lg:col-span-7 space-y-5">
@@ -148,9 +209,9 @@ export default function CheckoutModal() {
                   1. Thông Tin Người Nhận
                 </span>
                 {currentUser ? (
-                  <span className="text-[11px] text-[#2C5F6F] font-sans font-medium flex items-center gap-1">
+                  <span className="text-[11px] text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-300 font-sans font-semibold flex items-center gap-1">
                     <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Tự điền từ tài khoản</span>
+                    <span>Tài khoản xác thực: {currentUser.name}</span>
                   </span>
                 ) : (
                   <span className="text-[11px] text-[#8C6D27] font-serif">Bảo mật thông tin</span>
@@ -479,6 +540,7 @@ export default function CheckoutModal() {
           </div>
 
         </form>
+      )}
 
       </div>
     </div>

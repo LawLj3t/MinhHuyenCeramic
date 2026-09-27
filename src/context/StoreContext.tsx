@@ -101,7 +101,7 @@ interface StoreContextType {
   
   // Orders
   orders: Order[];
-  createOrder: (orderData: Omit<Order, 'id' | 'createdAt' | 'orderStatus' | 'paymentStatus'>) => Order;
+  createOrder: (orderData: Omit<Order, 'id' | 'createdAt' | 'orderStatus' | 'paymentStatus'>) => Order | null;
   updateOrderStatus: (orderId: string, status: Order['orderStatus']) => void;
   updatePaymentStatus: (orderId: string, status: Order['paymentStatus']) => void;
   latestOrder: Order | null;
@@ -556,12 +556,17 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const cartFinalTotal = Math.max(0, cartSubtotal - discountAmount + shippingFee);
 
   // Order operations
-  const createOrder = (orderData: Omit<Order, 'id' | 'createdAt' | 'orderStatus' | 'paymentStatus'>) => {
+  const createOrder = (orderData: Omit<Order, 'id' | 'createdAt' | 'orderStatus' | 'paymentStatus'>): Order | null => {
+    if (!currentUser) {
+      console.warn('Yêu cầu đăng nhập trước khi tạo đơn hàng.');
+      return null;
+    }
+
     const randomCode = Math.floor(1000 + Math.random() * 9000);
     const newOrder: Order = {
       ...orderData,
       id: `MH-${randomCode}`,
-      userId: currentUser?.id,
+      userId: currentUser.id,
       orderStatus: 'pending',
       paymentStatus: orderData.paymentMethod === 'cod' ? 'pending' : 'pending',
       createdAt: new Date().toISOString()

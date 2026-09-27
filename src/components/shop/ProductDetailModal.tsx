@@ -442,9 +442,9 @@ export default function ProductDetailModal() {
 
                 <button
                   onClick={handleBuyNow}
-                  className="py-3 px-4 bg-[#163845] hover:bg-[#2C5F6F] text-white font-sans font-bold text-xs uppercase rounded-lg transition-colors shadow-md flex items-center justify-center gap-2"
+                  className="py-3 px-4 bg-[#163845] hover:bg-[#2C5F6F] text-white font-sans font-bold text-xs uppercase rounded-lg transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Đặt Mua Ngay</span>
+                  <span>{currentUser ? 'Đặt Mua Ngay' : 'Đăng Nhập Đặt Mua'}</span>
                 </button>
               </div>
 
